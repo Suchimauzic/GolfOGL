@@ -7,4 +7,4 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
 file(GLOB CPPS src/*.cpp)
 
-add_executable(${PROJECT_NAME} CPPS)
+add_executable(${PROJECT_NAME} ${CPPS})
