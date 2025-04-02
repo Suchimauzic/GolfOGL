@@ -2,7 +2,7 @@
 
 GLFWwindow* Window::window = nullptr;
 
-int Window::init(int width, int height, const char* title)
+short Window::init(int width, int height, const char* title)
 {
     // GLFW
     glfwInit();

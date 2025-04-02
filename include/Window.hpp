@@ -10,7 +10,7 @@
 class Window
 {
 public:
-    static int init(int width, int height, const char* title);
+    static short init(int width, int height, const char* title);
     static void deinit();
     
     static int isShouldClose();
