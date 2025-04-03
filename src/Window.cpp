@@ -33,6 +33,8 @@ short Window::init(int width, int height, const char* title)
 
     glfwSetFramebufferSizeCallback(window, Window::framebufferSizeCallback);
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     return 0;
 }
 
