@@ -41,25 +41,25 @@ glm::mat4 Camera::getViewMatrix()
     return glm::lookAt(position, position + front, up);
 }
 
-void Camera::proccessKeyboard(Camera_Movement direction, float deltaTime)
+void Camera::proccessKeyboard(CameraMovement direction, float deltaTime)
 {
     float velocity = movementSpeed * deltaTime;
 
     switch (direction)
     {
-        case Camera_Movement::FORWARD:
+        case CameraMovement::FORWARD:
             position += front * velocity;
             break;
         
-        case Camera_Movement::BACKWARD:
+        case CameraMovement::BACKWARD:
             position -= front * velocity;
             break;
         
-        case Camera_Movement::LEFT:
+        case CameraMovement::LEFT:
             position -= right * velocity;
             break;
         
-        case Camera_Movement::RIGHT:
+        case CameraMovement::RIGHT:
             position += right * velocity;
             break;
     }
@@ -79,7 +79,7 @@ void Camera::proccessMouseMovement(float xOffest, float yOffset, GLboolean const
         if (pitch > 89.0f)
             pitch = 89.0f;
         else if (pitch < -89.0f)
-            pitch -89.0f;
+            pitch = -89.0f;
     }
 
     updateCameraVectors();
@@ -102,7 +102,7 @@ void Camera::updateCameraVectors()
         sin(glm::radians(pitch)),                           // y
         sin(glm::radians(yaw)) * cos(glm::radians(pitch))   // z
     );
-    front = glm::normalize(front);
+    this->front = glm::normalize(front);
 
     right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));

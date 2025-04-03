@@ -11,7 +11,10 @@ int main()
     short windowStatus = Window::init(800, 600, "GolfGame");
 
     if (windowStatus != 0)
+    {
+        Window::deinit();
         return windowStatus;
+    }
     
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
     
@@ -39,15 +42,32 @@ int main()
 
     glBindVertexArray(0);
     
+    float currentFrame;
     while (!Window::isShouldClose())
     {
-        glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // deltaTime
+        currentFrame = static_cast<float>(glfwGetTime());
+        Window::deltaTime = currentFrame - Window::lastFrame;
+        Window::lastFrame = currentFrame;
 
         Window::proccessInput();
 
+        glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         shader.use();
+        glm::mat4 projection = glm::perspective(glm::radians(Window::camera->zoom), 800.0f / 600, 1.0f, 100.0f);
+        shader.setMat4("projection", projection);
+
+        glm::mat4 view = Window::camera->getViewMatrix();
+        shader.setMat4("view", view);
+
         glBindVertexArray(VAO);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        shader.setMat4("model", model);
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         Window::swapBuffers();

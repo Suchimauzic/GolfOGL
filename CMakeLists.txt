@@ -32,7 +32,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res)
 endif()
 
 # Copy res directory in build
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders)
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders)
     add_custom_command(TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
