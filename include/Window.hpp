@@ -17,6 +17,8 @@ public:
     static void swapBuffers();
     static void pollEvents();
 
+    static void proccessInput();
+
 private:
     static GLFWwindow* window;
 

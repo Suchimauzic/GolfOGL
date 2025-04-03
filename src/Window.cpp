@@ -56,6 +56,14 @@ void Window::pollEvents()
     glfwPollEvents();
 }
 
+void Window::proccessInput()
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, 1);
+    }
+}
+
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
