@@ -4,7 +4,9 @@
 #include <iostream>
 
 #include "Window.hpp"
+#include "GameConfig.hpp"
 #include "Shader.hpp"
+#include "Camera.hpp"
 
 int main()
 {
@@ -56,7 +58,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
-        glm::mat4 projection = glm::perspective(glm::radians(Window::camera->zoom), 800.0f / 600, 1.0f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(Window::camera->zoom), static_cast<float>(GameConfig::width) / static_cast<float>(GameConfig::height), 1.0f, 100.0f);
         shader.setMat4("projection", projection);
 
         glm::mat4 view = Window::camera->getViewMatrix();
