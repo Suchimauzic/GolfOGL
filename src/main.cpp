@@ -8,7 +8,7 @@
 
 int main()
 {
-    short windowStatus = Window::init(800, 600, "GolfGame");
+    short windowStatus = Window::init(1280, 720, "GolfGame");
 
     if (windowStatus != 0)
     {

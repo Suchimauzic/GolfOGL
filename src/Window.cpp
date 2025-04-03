@@ -49,6 +49,9 @@ short Window::init(int width, int height, const char* title)
     lastX = width / 2;
     lastY = height / 2;
 
+    GameConfig::width = width;
+    GameConfig::height = height;
+
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
     return 0;
