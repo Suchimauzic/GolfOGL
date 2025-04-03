@@ -19,6 +19,8 @@ public:
 
 private:
     static GLFWwindow* window;
+
+    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 };
 
 #endif

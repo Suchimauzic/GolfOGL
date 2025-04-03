@@ -31,6 +31,8 @@ short Window::init(int width, int height, const char* title)
         return -1;
     }
 
+    glfwSetFramebufferSizeCallback(window, Window::framebufferSizeCallback);
+
     return 0;
 }
 
@@ -52,4 +54,9 @@ void Window::swapBuffers()
 void Window::pollEvents()
 {
     glfwPollEvents();
+}
+
+void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
