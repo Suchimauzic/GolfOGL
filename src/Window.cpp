@@ -38,12 +38,15 @@ short Window::init(int width, int height, const char* title)
         return -1;
     }
 
+    // Callbacks
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // Enables
+    glEnable(GL_DEPTH_TEST);
 
     // Initing static variables
     lastX = width / 2;

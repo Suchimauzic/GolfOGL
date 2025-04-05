@@ -8,6 +8,8 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
+#include "Cube.hpp"
+
 int main()
 {
     short windowStatus = Window::init(1280, 720, "GolfGame");
@@ -20,30 +22,15 @@ int main()
     
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
     
-    float vertices[] ={
-        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-    };
+    Cube* cube = new Cube();
 
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    
+    cube->setRotate(30.0f, glm::vec3(-1.0f, 0.0f, 0.0f));
+    cube->setSize(glm::vec3(8.0f, 0.0f, 8.0f));
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    Cube* cube2 = new Cube();
 
+    //cube2->setPosition(glm::vec3(0.0f, 0.0f, 10.0f));
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-    
     float currentFrame;
     while (!Window::isShouldClose())
     {
@@ -55,22 +42,12 @@ int main()
         Window::proccessInput();
 
         glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.use();
-        glm::mat4 projection = glm::perspective(glm::radians(Window::camera->zoom), static_cast<float>(GameConfig::width) / static_cast<float>(GameConfig::height), 1.0f, 100.0f);
-        shader.setMat4("projection", projection);
+        cube->render(shader, GameConfig::width, GameConfig::height);
 
-        glm::mat4 view = Window::camera->getViewMatrix();
-        shader.setMat4("view", view);
-
-        glBindVertexArray(VAO);
-
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        shader.setMat4("model", model);
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        cube2->setPosition(glm::vec3(0.0f, 0.0f, static_cast<float>(cos(glfwGetTime()) * Window::deltaTime * 4)));
+        cube2->render(shader, GameConfig::width, GameConfig::height);
 
         Window::swapBuffers();
         Window::pollEvents();
