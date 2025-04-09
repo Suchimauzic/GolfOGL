@@ -1,6 +1,6 @@
 #include "Objects/Object.hpp"
 
-Object::Object(int width, int height) : model(glm::mat4(1.0f))
+Object::Object() : model(glm::mat4(1.0f))
 {
 }
 

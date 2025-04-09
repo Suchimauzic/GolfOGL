@@ -15,7 +15,7 @@
 class Cube : public Object
 {
 public:
-    Cube(int width, int height);
+    Cube();
     ~Cube();
 
     void render(Shader shader, int width, int height) override;

@@ -13,10 +13,6 @@
 class Object
 {
 public:
-
-    Object(int width, int height);
-    virtual ~Object();
-
     virtual void render(Shader shader, int width, int height);
     void setPosition(const glm::vec3 position);
     void setSize(const glm::vec3 size);
@@ -29,6 +25,9 @@ protected:
     glm::mat4 model;
     glm::mat4 view;
     glm::mat4 projection;
+
+    Object();
+    virtual ~Object();
 
     virtual void generate();
 };

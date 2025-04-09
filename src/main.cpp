@@ -25,8 +25,8 @@ int main()
     
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
 
-    // Sphere* sphere = new Sphere();
-    Cube* cube = new Cube(GameConfig::width, GameConfig::height);
+    Sphere* sphere = new Sphere(1, 30, 30);
+    // Cube* cube = new Cube();
 
     float currentFrame;
 
@@ -45,15 +45,15 @@ int main()
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        // sphere->render(shader, GameConfig::width, GameConfig::height);
+        sphere->render(shader, GameConfig::width, GameConfig::height);
 
         // cube->setPosition(glm::vec3((float)glfwGetTime(), 0.0f, 0.0f));
-        cube->render(shader, GameConfig::width, GameConfig::height);
+        // cube->render(shader, GameConfig::width, GameConfig::height);
         Window::swapBuffers();
     }
 
-    // delete sphere;
-    delete cube;
+    delete sphere;
+    // delete cube;
     Window::deinit();
     return 0;
 }

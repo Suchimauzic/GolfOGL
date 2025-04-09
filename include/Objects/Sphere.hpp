@@ -8,31 +8,28 @@
 #include "Camera.hpp"
 #include "Window.hpp"
 
+#include "Objects/Object.hpp"
+
 #include <vector>
 #include <cmath>
 
-class Sphere
+class Sphere : public Object
 {
 public:
     Sphere(float radius, int sectorCount, int stackCount);
     ~Sphere();
 
-    void render(Shader shader, int width, int height);
-    void setPosition(const glm::vec3 position);
-    void setSize(const glm::vec3 size);
-    void setRotate(const float angle, const glm::vec3 rotate);
+    void render(Shader shader, int width, int height) override;
 
 private:
-    std::vector<float> vertices;
     std::vector<int> indices;
-    unsigned int VAO, VBO;
     unsigned int EBO;
 
-    glm::mat4 model;
-    glm::mat4 view;
-    glm::mat4 projection;
+    float radius;
+    int sectorCount;
+    int stackCount;
 
-    void generate(float radius, int sectorCount, int stackCount);
+    void generate() override;
 };
 
 #endif

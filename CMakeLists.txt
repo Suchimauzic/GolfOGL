@@ -15,17 +15,7 @@ set(PROJECT_CPP_PATH
 )
 
 # Libs
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-
-option(GLFW_BUILD_WAYLAND TRUE)
-
-# subdirectory
-add_subdirectory(libs/glfw)
-add_subdirectory(libs/glad)
-add_subdirectory(libs/glm)
+add_subdirectory(libs)
 
 # .hpp and .cpp files
 include_directories(${PROJECT_INCLUDE_PATH})
@@ -33,6 +23,9 @@ file(GLOB_RECURSE CPPS ${PROJECT_CPP_PATH})
 
 add_executable(${PROJECT_NAME} ${CPPS})
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
+
+
+# Checking resources
 
 if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.frag)
     add_custom_command(TARGET ${PROJECT_NAME}

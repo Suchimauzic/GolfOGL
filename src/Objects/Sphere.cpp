@@ -1,8 +1,9 @@
 #include "Objects/Sphere.hpp"
 
-Sphere::Sphere(float radius, int sectorCount, int stackCount) : model(glm::mat4(1.0f))
+Sphere::Sphere(float radius, int sectorCount, int stackCount)
+    : Object(), radius(radius), sectorCount(sectorCount), stackCount(stackCount) 
 {
-    generate(radius, sectorCount, stackCount);
+    generate();
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
@@ -51,30 +52,12 @@ void Sphere::render(Shader shader, int width, int height)
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void Sphere::setPosition(const glm::vec3 position)
-{
-    model = glm::translate(model, position);
-}
-
-void Sphere::setSize(const glm::vec3 size)
-{
-    model = glm::scale(model, size);
-}
-
-void Sphere::setRotate(const float angle, const glm::vec3 rotate)
-{
-    model = glm::rotate(model, glm::radians(angle), rotate);
-}
-
-void Sphere::generate(float radius, int sectorCount, int stackCount)
+void Sphere::generate()
 {
     vertices.clear();
     indices.clear();
 
-    float x;
-    float y;
-    float z;
-    float xy;
+    float x, y, z, xy;
     
     float sectorStep = 2 * M_PI / sectorCount;
     float stackStep = M_PI / stackCount;

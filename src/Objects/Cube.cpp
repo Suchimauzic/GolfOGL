@@ -1,6 +1,6 @@
 #include "Objects/Cube.hpp"
 
-Cube::Cube(int width, int height) : Object(width, height)
+Cube::Cube() : Object()
 {
     generate();
 
