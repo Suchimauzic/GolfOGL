@@ -14,7 +14,7 @@
 class Sphere
 {
 public:
-    Sphere();
+    Sphere(float radius, int sectorCount, int stackCount);
     ~Sphere();
 
     void render(Shader shader, int width, int height);

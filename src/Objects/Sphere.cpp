@@ -71,7 +71,7 @@ void Sphere::generate(float radius, int sectorCount, int stackCount)
     vertices.clear();
     indices.clear();
 
-    float x
+    float x;
     float y;
     float z;
     float xy;

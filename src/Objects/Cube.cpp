@@ -1,6 +1,6 @@
 #include "Objects/Cube.hpp"
 
-Cube::Cube() : model(glm::mat4(1.0f))
+Cube::Cube(int width, int height) : Object(width, height)
 {
     generate();
 
@@ -29,6 +29,7 @@ Cube::~Cube()
 void Cube::render(Shader shader, int width, int height)
 {
     shader.use();
+
     projection = glm::perspective(glm::radians(Window::camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader.setMat4("projection", projection);
 
@@ -41,21 +42,6 @@ void Cube::render(Shader shader, int width, int height)
     shader.setMat4("model", model);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-
-void Cube::setPosition(const glm::vec3 position)
-{
-    model = glm::translate(model, position);
-}
-
-void Cube::setSize(const glm::vec3 size)
-{
-    model = glm::scale(model, size);
-}
-
-void Cube::setRotate(const float angle, const glm::vec3 rotate)
-{
-    model = glm::rotate(model, glm::radians(angle), rotate);
 }
 
 void Cube::generate()

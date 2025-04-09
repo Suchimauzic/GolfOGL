@@ -9,6 +9,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
+#include "Objects/Object.hpp"
 #include "Objects/Cube.hpp"
 #include "Objects/Sphere.hpp"
 
@@ -24,8 +25,8 @@ int main()
     
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
 
-    Sphere* sphere = new Sphere();
-    Cube* cube = new Cube();
+    // Sphere* sphere = new Sphere();
+    Cube* cube = new Cube(GameConfig::width, GameConfig::height);
 
     float currentFrame;
 
@@ -44,12 +45,14 @@ int main()
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        sphere->render(shader, GameConfig::width, GameConfig::height);
+        // sphere->render(shader, GameConfig::width, GameConfig::height);
+
+        // cube->setPosition(glm::vec3((float)glfwGetTime(), 0.0f, 0.0f));
         cube->render(shader, GameConfig::width, GameConfig::height);
         Window::swapBuffers();
     }
 
-    delete sphere;
+    // delete sphere;
     delete cube;
     Window::deinit();
     return 0;

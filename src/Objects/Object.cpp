@@ -1,16 +1,10 @@
 #include "Objects/Object.hpp"
 
-Object::Object(int width, int height)
-    : model(glm::mat4(1.0f)),
-    view(Window::camera->getViewMatrix()),
-    projection(
-        glm::perspective(
-            glm::radians(Window::camera->zoom),
-            static_cast<float>(width) / static_cast<float>(height),
-            0.1f,
-            100.0f
-        )
-    )
+Object::Object(int width, int height) : model(glm::mat4(1.0f))
+{
+}
+
+Object::~Object()
 {
 }
 

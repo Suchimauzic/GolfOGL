@@ -8,28 +8,20 @@
 #include "Camera.hpp"
 #include "Window.hpp"
 
+#include "Objects/Object.hpp"
+
 #include <vector>
 
-class Cube
+class Cube : public Object
 {
 public:
-    Cube();
+    Cube(int width, int height);
     ~Cube();
 
-    void render(Shader shader, int width, int height);
-    void setPosition(const glm::vec3 position);
-    void setSize(const glm::vec3 size);
-    void setRotate(const float angle, const glm::vec3 rotate);
+    void render(Shader shader, int width, int height) override;
 
 private:
-    std::vector<float> vertices;
-    unsigned int VAO, VBO;
-
-    glm::mat4 model;
-    glm::mat4 view;
-    glm::mat4 projection;
-
-    void generate();
+    void generate() override;
 };
 
 #endif

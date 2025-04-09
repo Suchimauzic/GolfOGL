@@ -3,6 +3,17 @@ project(GolfProject)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Set variables
+set(PROJECT_INCLUDE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Objects
+)
+
+set(PROJECT_CPP_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Objects/*.cpp
+)
+
 # Libs
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -17,8 +28,8 @@ add_subdirectory(libs/glad)
 add_subdirectory(libs/glm)
 
 # .hpp and .cpp files
-include_directories(${CMAKE_SOURCE_DIR}/include/)
-file(GLOB CPPS src/*.cpp)
+include_directories(${PROJECT_INCLUDE_PATH})
+file(GLOB_RECURSE CPPS ${PROJECT_CPP_PATH})
 
 add_executable(${PROJECT_NAME} ${CPPS})
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
