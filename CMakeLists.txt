@@ -27,7 +27,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
 
 # Checking resources
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.frag)
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res)
     add_custom_command(TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res
@@ -35,11 +35,14 @@ if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS
     )
 endif()
 
-# Copy res directory in build
-add_custom_command(TARGET ${PROJECT_NAME}
-    PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_CURRENT_SOURCE_DIR}/res
-    ${CMAKE_CURRENT_BINARY_DIR}/res
-    COMMENT "Copying res in building directory"
-)
+
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/ OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.frag)
+    # Copy res directory in build
+    add_custom_command(TARGET ${PROJECT_NAME}
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/res
+        ${CMAKE_CURRENT_BINARY_DIR}/res
+        COMMENT "Copying res in building directory"
+    )
+endif()
