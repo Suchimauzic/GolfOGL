@@ -1,4 +1,4 @@
-#include "Sphere.hpp"
+#include "Objects/Sphere.hpp"
 
 Sphere::Sphere(float radius, int sectorCount, int stackCount) : model(glm::mat4(1.0f))
 {

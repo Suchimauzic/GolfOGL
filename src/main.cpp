@@ -9,8 +9,8 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
-#include "Cube.hpp"
-#include "Sphere.hpp"
+#include "Objects/Cube.hpp"
+#include "Objects/Sphere.hpp"
 
 int main()
 {

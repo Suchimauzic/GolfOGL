@@ -1,4 +1,4 @@
-#include "Cube.hpp"
+#include "Objects/Cube.hpp"
 
 Cube::Cube() : model(glm::mat4(1.0f))
 {
