@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <cmath>
 
 #include "Window.hpp"
 #include "GameConfig.hpp"
@@ -9,10 +10,11 @@
 #include "Camera.hpp"
 
 #include "Cube.hpp"
+#include "Sphere.hpp"
 
 int main()
 {
-    short windowStatus = Window::init(1280, 720, "GolfGame");
+    short windowStatus = Window::init(1920, 1080, "GolfGame");
 
     if (windowStatus != 0)
     {
@@ -21,17 +23,12 @@ int main()
     }
     
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
-    
+
+    Sphere* sphere = new Sphere();
     Cube* cube = new Cube();
 
-    cube->setRotate(30.0f, glm::vec3(-1.0f, 0.0f, 0.0f));
-    cube->setSize(glm::vec3(8.0f, 0.0f, 8.0f));
-
-    Cube* cube2 = new Cube();
-
-    //cube2->setPosition(glm::vec3(0.0f, 0.0f, 10.0f));
-
     float currentFrame;
+
     while (!Window::isShouldClose())
     {
         // deltaTime
@@ -40,19 +37,20 @@ int main()
         Window::lastFrame = currentFrame;
 
         Window::proccessInput();
+        Window::pollEvents();
 
         glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        sphere->render(shader, GameConfig::width, GameConfig::height);
         cube->render(shader, GameConfig::width, GameConfig::height);
-
-        cube2->setPosition(glm::vec3(0.0f, 0.0f, static_cast<float>(cos(glfwGetTime()) * Window::deltaTime * 4)));
-        cube2->render(shader, GameConfig::width, GameConfig::height);
-
         Window::swapBuffers();
-        Window::pollEvents();
     }
 
+    delete sphere;
+    delete cube;
     Window::deinit();
     return 0;
 }

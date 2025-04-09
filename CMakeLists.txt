@@ -23,7 +23,7 @@ file(GLOB CPPS src/*.cpp)
 add_executable(${PROJECT_NAME} ${CPPS})
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res)
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.frag)
     add_custom_command(TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res

@@ -1,5 +1,5 @@
-#ifndef CUBE_HPP
-#define CUBE_HPP
+#ifndef SPHERE_HPP
+#define SPHERE_HPP
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -9,12 +9,13 @@
 #include "Window.hpp"
 
 #include <vector>
+#include <cmath>
 
-class Cube
+class Sphere
 {
 public:
-    Cube();
-    ~Cube();
+    Sphere();
+    ~Sphere();
 
     void render(Shader shader, int width, int height);
     void setPosition(const glm::vec3 position);
@@ -23,13 +24,15 @@ public:
 
 private:
     std::vector<float> vertices;
+    std::vector<int> indices;
     unsigned int VAO, VBO;
+    unsigned int EBO;
 
     glm::mat4 model;
     glm::mat4 view;
     glm::mat4 projection;
 
-    void generate();
+    void generate(float radius, int sectorCount, int stackCount);
 };
 
 #endif
