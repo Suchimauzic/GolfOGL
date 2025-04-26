@@ -26,14 +26,15 @@ Cube::~Cube()
     glDeleteBuffers(1, &VBO);
 }
 
-void Cube::render(Shader shader, int width, int height)
+void Cube::render(Camera* camera, Shader shader, int width, int height)
 {
+    
     shader.use();
 
-    projection = glm::perspective(glm::radians(Window::camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader.setMat4("projection", projection);
 
-    view = Window::camera->getViewMatrix();
+    view = camera->getViewMatrix();
     shader.setMat4("view", view);
 
     glBindVertexArray(VAO);

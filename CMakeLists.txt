@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(GolfOGL)
 
 set(CMAKE_CXX_STANDARD 17)
+set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
 # Set variables
 set(PROJECT_INCLUDE_PATH
@@ -27,22 +29,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
 
 # Checking resources
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res)
+if (NOT EXISTS ${OUTPUT_DIR}/res)
     add_custom_command(TARGET ${PROJECT_NAME}
         PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/res
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}/res
         COMMENT "Creating res direction"
     )
 endif()
 
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/ OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.vert OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/res/shaders/shader.frag)
+if (NOT EXISTS ${OUTPUT_DIR}/res/shaders/ OR NOT EXISTS ${OUTPUT_DIR}/res/shaders/shader.vert OR NOT EXISTS ${OUTPUT_DIR}/res/shaders/shader.frag)
     # Copy res directory in build
     add_custom_command(TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/res
-        ${CMAKE_CURRENT_BINARY_DIR}/res
+        ${OUTPUT_DIR}/res
         COMMENT "Copying res in building directory"
     )
 endif()

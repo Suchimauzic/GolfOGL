@@ -8,7 +8,7 @@ Object::~Object()
 {
 }
 
-void Object::render(Shader shader, int width, int height)
+void Object::render(Camera* camera, Shader shader, int width, int height)
 {
 }
 

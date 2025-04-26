@@ -13,7 +13,7 @@
 class Object
 {
 public:
-    virtual void render(Shader shader, int width, int height);
+    virtual void render(Camera* camera, Shader shader, int width, int height);
     void setPosition(const glm::vec3 position);
     void setSize(const glm::vec3 size);
     void setRotate(const float angle, const glm::vec3 rotate);

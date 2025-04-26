@@ -13,27 +13,39 @@
 class Window
 {
 public:
-    // Timing
-    static float deltaTime;
-    static float lastFrame;
-
+    // Camera
     static Camera* camera;
 
-    static short init(int width, int height, const char* title);
-    static void deinit();
+    Window(int width, int height, const char* title);
+    ~Window();
     
-    static int isShouldClose();
-    static void swapBuffers();
-    static void pollEvents();
+    // Loop methods
+    int isShouldClose();
+    void swapBuffers();
+    void pollEvents();
 
-    static void proccessInput();
+    void proccessInput();
+
+    void updateDeltaTime(float currentFrame);
+
+    // Getters
+    int getCodeStatus();
+    float getDeltaTime();
 
 private:
-    static GLFWwindow* window;
+    // Window attributes
+    GLFWwindow* window;
+    int codeStatus;
+
+    // Timing
+    float deltaTime;
+    float lastFrame;
     
     // Camera
     static float lastX;
     static float lastY;
+
+    void initWindow(int width, int height, const char* title);
 
     // Callbacks
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);

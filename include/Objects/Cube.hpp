@@ -18,7 +18,7 @@ public:
     Cube();
     ~Cube();
 
-    void render(Shader shader, int width, int height) override;
+    void render(Camera* camera, Shader shader, int width, int height) override;
 
 private:
     void generate() override;

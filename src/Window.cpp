@@ -1,15 +1,29 @@
 #include "Window.hpp"
 
 // Variables
-GLFWwindow* Window::window = nullptr;
+
 Camera* Window::camera = nullptr;
 
-float Window::deltaTime = 0.0f;
-float Window::lastFrame = 0.0f;
 float Window::lastX = 0.0f;
 float Window::lastY = 0.0f;
 
-short Window::init(int width, int height, const char* title)
+Window::Window(int width, int height, const char* title)
+{
+    deltaTime = 0.0f;
+    lastFrame = 0.0f;
+
+    codeStatus = 0;
+
+    initWindow(width, height, title);
+}
+
+Window::~Window()
+{
+    delete camera;
+    glfwTerminate();
+}
+
+void Window::initWindow(int width, int height, const char* title)
 {
     // GLFW
     glfwInit();
@@ -24,8 +38,8 @@ short Window::init(int width, int height, const char* title)
     if (window == nullptr)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
+        codeStatus = -1;
+        return;
     }
 
     glfwMakeContextCurrent(window);
@@ -34,8 +48,8 @@ short Window::init(int width, int height, const char* title)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cerr << "Failed to initialize GLAD" << std::endl;
-        glfwTerminate();
-        return -1;
+        codeStatus = -2;
+        return;
     }
 
     // Callbacks
@@ -56,14 +70,6 @@ short Window::init(int width, int height, const char* title)
     GameConfig::height = height;
 
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
-    return 0;
-}
-
-void Window::deinit()
-{
-    delete camera;
-    glfwTerminate();
 }
 
 int Window::isShouldClose()
@@ -94,6 +100,22 @@ void Window::proccessInput()
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, 1);
+}
+
+void Window::updateDeltaTime(float currentFrame)
+{
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+}
+
+int Window::getCodeStatus()
+{
+    return codeStatus;
+}
+
+float Window::getDeltaTime()
+{
+    return deltaTime;
 }
 
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
