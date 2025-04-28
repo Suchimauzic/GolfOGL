@@ -35,19 +35,19 @@ Sphere::~Sphere()
     glDeleteBuffers(1, &VBO);
 }
 
-void Sphere::render(Camera* camera, Shader shader, int width, int height)
+void Sphere::render(Camera* camera, Shader* shader, int width, int height)
 {
-    shader.use();
+    shader->use();
     projection = glm::perspective(glm::radians(camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
-    shader.setMat4("projection", projection);
+    shader->setMat4("projection", projection);
 
     view = camera->getViewMatrix();
-    shader.setMat4("view", view);
+    shader->setMat4("view", view);
 
     glBindVertexArray(VAO);
 
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-    shader.setMat4("model", model);
+    shader->setMat4("model", model);
 
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }

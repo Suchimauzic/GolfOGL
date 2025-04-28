@@ -21,6 +21,7 @@ void Game::gameLoop()
     place->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 
     cube->setPosition(glm::vec3(0.0f, 4.0f, 0.0f));
+    
 
     while (!window->isShouldClose())
     {
@@ -28,8 +29,8 @@ void Game::gameLoop()
         window->updateDeltaTime( static_cast<float>(glfwGetTime()) );
 
         // Events
-        window->proccessInput();
         window->pollEvents();
+        window->proccessInput();
 
         // OpenGL
         glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
@@ -37,10 +38,12 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         
-        place->render(window->camera, shader, GameConfig::width, GameConfig::height);
-        cube->render(window->camera, shader, GameConfig::width, GameConfig::height);
+        place->render(window->camera, &shader, GameConfig::width, GameConfig::height);
+        cube->render(window->camera, &shader, GameConfig::width, GameConfig::height);
 
         window->swapBuffers();
+
+        // cube->setPosition((cube->getPosition() - glm::vec3(0.0f, 9.81f, 0.0f)) * window->getDeltaTime());
     }
 
     delete place;

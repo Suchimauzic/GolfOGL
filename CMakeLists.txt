@@ -38,13 +38,11 @@ if (NOT EXISTS ${OUTPUT_DIR}/res)
 endif()
 
 
-if (NOT EXISTS ${OUTPUT_DIR}/res/shaders/ OR NOT EXISTS ${OUTPUT_DIR}/res/shaders/shader.vert OR NOT EXISTS ${OUTPUT_DIR}/res/shaders/shader.frag)
-    # Copy res directory in build
-    add_custom_command(TARGET ${PROJECT_NAME}
-        PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/res
-        ${OUTPUT_DIR}/res
-        COMMENT "Copying res in building directory"
-    )
-endif()
+# Copy res directory in build
+add_custom_command(TARGET ${PROJECT_NAME}
+    PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/res
+    ${OUTPUT_DIR}/res
+    COMMENT "Copying res in building directory"
+)
