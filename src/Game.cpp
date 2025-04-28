@@ -38,8 +38,8 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         
-        place->render(window->camera, &shader, GameConfig::width, GameConfig::height);
-        cube->render(window->camera, &shader, GameConfig::width, GameConfig::height);
+        place->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
+        cube->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
 
         window->swapBuffers();
 

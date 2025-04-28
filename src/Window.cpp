@@ -7,6 +7,7 @@ Camera* Window::camera = nullptr;
 float Window::lastX = 0.0f;
 float Window::lastY = 0.0f;
 
+
 Window::Window(int width, int height, const char* title)
 {
     deltaTime = 0.0f;
@@ -23,6 +24,8 @@ Window::~Window()
     glfwTerminate();
 }
 
+
+// Window initialization function
 void Window::initWindow(int width, int height, const char* title)
 {
     // GLFW
@@ -75,6 +78,9 @@ void Window::initWindow(int width, int height, const char* title)
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
+
+// Loop methods
+
 int Window::isShouldClose()
 {
     return glfwWindowShouldClose(window);
@@ -111,6 +117,9 @@ void Window::updateDeltaTime(float currentFrame)
     lastFrame = currentFrame;
 }
 
+
+// Geters
+
 int Window::getCodeStatus()
 {
     return codeStatus;
@@ -120,6 +129,14 @@ float Window::getDeltaTime()
 {
     return deltaTime;
 }
+
+Camera* Window::getCamera()
+{
+    return camera;
+}
+
+
+// Callbacks
 
 void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {

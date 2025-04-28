@@ -13,9 +13,6 @@
 class Window
 {
 public:
-    // Camera
-    static Camera* camera;
-
     Window(int width, int height, const char* title);
     ~Window();
     
@@ -31,8 +28,12 @@ public:
     // Getters
     int getCodeStatus();
     float getDeltaTime();
+    Camera* getCamera();
 
 private:
+    // Camera
+    static Camera* camera;
+
     // Window attributes
     GLFWwindow* window;
     int codeStatus;
