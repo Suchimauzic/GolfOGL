@@ -10,9 +10,11 @@ float Window::lastY = 0.0f;
 
 Window::Window(int width, int height, const char* title)
 {
+    // deltaTime variables
     deltaTime = 0.0f;
     lastFrame = 0.0f;
 
+    // 
     codeStatus = 0;
 
     initWindow(width, height, title);
@@ -66,6 +68,7 @@ void Window::initWindow(int width, int height, const char* title)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
+    glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
 
     // Initing static variables

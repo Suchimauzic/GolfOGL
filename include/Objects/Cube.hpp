@@ -6,7 +6,6 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Window.hpp"
 
 #include "Objects/Object.hpp"
 
@@ -17,8 +16,6 @@ class Cube : public Object
 public:
     Cube();
     ~Cube();
-
-    void render(Camera* camera, Shader* shader, int width, int height) override;
 
 private:
     void generate() override;

@@ -6,7 +6,6 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Window.hpp"
 
 #include <vector>
 
@@ -27,7 +26,9 @@ public:
 
 protected:
     std::vector<float> vertices;
-    unsigned int VAO, VBO;
+    std::vector<int> indices;
+    
+    unsigned int VAO, VBO, EBO;
 
     // Matrices
     glm::mat4 model;

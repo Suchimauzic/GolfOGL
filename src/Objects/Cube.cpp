@@ -11,10 +11,15 @@ Cube::Cube() : Object()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glGenBuffers(1, &EBO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -26,67 +31,47 @@ Cube::~Cube()
     glDeleteBuffers(1, &VBO);
 }
 
-void Cube::render(Camera* camera, Shader* shader, int width, int height)
-{
-    shader->use();
-
-    projection = glm::perspective(glm::radians(camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
-    shader->setMat4("projection", projection);
-
-    view = camera->getViewMatrix();
-    shader->setMat4("view", view);
-
-    glBindVertexArray(VAO);
-
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-    shader->setMat4("model", model);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-
 void Cube::generate()
 {
-    vertices = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,      
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f 
+    vertices =
+    {
+        // front
+        -0.5f,  0.5f,  0.5f,  0.25f,  0.4f,  0.6f,      // top left
+        -0.5f, -0.5f,  0.5f,  0.34f, 0.62f,  0.3f,      // bottom left
+         0.5f, -0.5f,  0.5f,  0.54f,  0.1f, 0.92f,      // bottom right
+         0.5f,  0.5f,  0.5f,  0.41f, 0.32f, 0.24f,      // top right
+
+        // back
+        -0.5f,  0.5f, -0.5f,  0.54f,  0.1f, 0.92f,      // top left
+        -0.5f, -0.5f, -0.5f,  0.34f, 0.62f,  0.3f,      // bottom left
+         0.5f, -0.5f, -0.5f,  0.25f,  0.4f,  0.6f,      // bottom right
+         0.5f,  0.5f, -0.5f,  0.41f, 0.32f, 0.24f       // top right
+    };
+
+    indices = 
+    {
+        // Front
+        0, 1, 2,
+        0, 2, 3,
+
+        // Left
+        4, 5, 1,
+        4, 1, 0,
+
+        // Right
+        3, 2, 6,
+        3, 6, 7,
+
+        // Back
+        7, 6, 5,
+        7, 5, 4,
+
+        // Upper
+        4, 0, 3,
+        4, 3, 7,
+
+        // Lower
+        1, 5, 6,
+        1, 6, 2
     };
 }
