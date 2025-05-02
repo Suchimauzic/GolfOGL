@@ -35,6 +35,7 @@ void Cube::generate()
 {
     vertices =
     {
+        // vertex            color
         // front
         -0.5f,  0.5f,  0.5f,  0.25f,  0.4f,  0.6f,      // top left
         -0.5f, -0.5f,  0.5f,  0.34f, 0.62f,  0.3f,      // bottom left

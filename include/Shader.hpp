@@ -10,6 +10,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include "Logger.hpp"
+
 class Shader
 {
 public:

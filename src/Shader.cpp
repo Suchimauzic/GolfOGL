@@ -27,7 +27,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
     catch(std::ifstream::failure& e)
     {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\n" << e.what() << std::endl;
+        Logger::printError("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
+        Logger::printError(e.what());
     }
 
     const char* vShaderCode = vertexCode.c_str();
@@ -142,8 +143,8 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetShaderInfoLog(shader, countChars, nullptr, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION of type: " << type << "\n"
-                << infoLog << std::endl;
+            Logger::printError("ERROR::SHADER_COMPILATION of type: " + type);
+            Logger::printError(infoLog);
             printLine();
         }
     }
@@ -154,8 +155,8 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetProgramInfoLog(shader, countChars, nullptr, infoLog);
-            std::cout << "ERROR::PROGRAMING_LINKING_ERROR of type: " << type << "\n"
-                << infoLog << std::endl;
+            Logger::printError("ERROR::PROGRAMING_LINKING_ERROR of type: " + type);
+            Logger::printError(infoLog);
             printLine();
         }
     }
@@ -163,10 +164,12 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type)
 
 void Shader::printLine()
 {
-    std::cout << "-- ";
+    std::string line = "-- ";
     for (unsigned int i = 0; i < 50; ++i)
     {
-        std::cout << "-";
+        line += "-";
     }
-    std::cout << " --" << std::endl;
+    line += " --";
+
+    Logger::printError(line);
 }

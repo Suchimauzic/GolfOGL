@@ -14,7 +14,6 @@ Window::Window(int width, int height, const char* title)
     deltaTime = 0.0f;
     lastFrame = 0.0f;
 
-    // 
     codeStatus = 0;
 
     initWindow(width, height, title);
@@ -42,7 +41,7 @@ void Window::initWindow(int width, int height, const char* title)
     // Checking if the window was created correctly
     if (window == nullptr)
     {
-        std::cerr << "Failed to create GLFW window" << std::endl;
+        Logger::printError("Failed to create GLFW window");
         codeStatus = -1;
         return;
     }
@@ -52,10 +51,23 @@ void Window::initWindow(int width, int height, const char* title)
     // Checking if GLAD is working correctly
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
+        Logger::printError("Failed to initialize GLAD");
         codeStatus = -2;
         return;
     }
+
+    // GLFW info
+    Logger::printInfo("----GLFW info----");
+    Logger::printValue("GLFW version", glfwGetVersionString());
+
+
+    // OpenGL info
+    Logger::printInfo("\n----OpenGL info----");
+    Logger::printValue("OpenGL Vendor", glGetString(GL_VENDOR));
+    Logger::printValue("OpenGL Renderer", glGetString(GL_RENDERER));
+    Logger::printValue("OpenGL Version", glGetString(GL_VERSION));
+
+    Logger::printInfo("");
 
     // Callbacks
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);

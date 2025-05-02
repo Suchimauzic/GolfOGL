@@ -9,6 +9,7 @@
 #include "GameConfig.hpp"
 #include "Shader.hpp"
 #include "Camera.hpp"
+#include "Logger.hpp"
 
 #include "Objects/Object.hpp"
 #include "Objects/Cube.hpp"

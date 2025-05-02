@@ -9,6 +9,7 @@
 
 #include "Camera.hpp"
 #include "GameConfig.hpp"
+#include "Logger.hpp"
 
 class Window
 {
