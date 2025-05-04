@@ -11,9 +11,9 @@
 #include "Camera.hpp"
 #include "Logger.hpp"
 
-#include "Objects/Object.hpp"
-#include "Objects/Cube.hpp"
-#include "Objects/Sphere.hpp"
+#include "Primitives/Object.hpp"
+#include "Primitives/Cube.hpp"
+#include "Primitives/Sphere.hpp"
 
 int main()
 {

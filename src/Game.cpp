@@ -22,6 +22,9 @@ void Game::gameLoop()
 
     cube->setPosition(glm::vec3(0.0f, 4.0f, 0.0f));
 
+    Sphere* sphere = new Sphere(1, 30, 30);
+    sphere->setPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+
     while (!window->isShouldClose())
     {
         // deltaTime
@@ -39,10 +42,12 @@ void Game::gameLoop()
 
         place->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
         cube->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
+
+        sphere->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
         
         window->swapBuffers();
 
-        cube->setPosition((cube->getPosition() - glm::vec3(0.0f, 9.81f, 0.0f)) * window->getDeltaTime());
+        // cube->setPosition((cube->getPosition() - glm::vec3(0.0f, 9.81f, 0.0f)) * window->getDeltaTime());
     }
 
     delete place;

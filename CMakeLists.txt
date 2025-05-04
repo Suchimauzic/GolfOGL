@@ -8,12 +8,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 # Set variables
 set(PROJECT_INCLUDE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Objects
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Components
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Primitives
 )
 
 set(PROJECT_CPP_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Objects/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Components/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Primitives/*.cpp
 )
 
 # Libs

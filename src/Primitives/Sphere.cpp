@@ -1,4 +1,4 @@
-#include "Objects/Sphere.hpp"
+#include "Primitives/Sphere.hpp"
 
 Sphere::Sphere(float radius, int sectorCount, int stackCount)
     : Object(), radius(radius), sectorCount(sectorCount), stackCount(stackCount) 
@@ -11,19 +11,19 @@ Sphere::Sphere(float radius, int sectorCount, int stackCount)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mesh->getVertices().size() * sizeof(Vertex), mesh->getVertices().data(), GL_STATIC_DRAW);
     
     
     glGenBuffers(1, &EBO);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(float), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndices().size() * sizeof(float), mesh->getIndices().data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
 }
@@ -37,6 +37,9 @@ Sphere::~Sphere()
 
 void Sphere::generate()
 {
+    std::vector<Vertex> vertices;
+    std::vector<int> indices;
+
     vertices.clear();
     indices.clear();
 
@@ -60,12 +63,12 @@ void Sphere::generate()
 
             x = xy * cosf(sectorAngel);
             y = xy * sinf(sectorAngel);
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
 
-            for (int k = 0; k < 3; ++k)
-                vertices.push_back(i / (sectorCount / 2));
+            Vertex vertex(glm::vec3(x, y, z));
+            vertices.push_back(vertex);
+
+            // for (int k = 0; k < 3; ++k)
+            //     vertices.push_back(i / (sectorCount / 2));
         }
     }    
 
@@ -91,4 +94,6 @@ void Sphere::generate()
             }
         }
     }
+
+    mesh = new Mesh(vertices, indices);
 }

@@ -69,17 +69,20 @@ void Window::initWindow(int width, int height, const char* title)
 
     Logger::printInfo("");
 
+
     // Callbacks
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
+    // Cursor mode
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Enables
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
+    // Culling face
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
 
@@ -90,7 +93,7 @@ void Window::initWindow(int width, int height, const char* title)
     GameConfig::width = width;
     GameConfig::height = height;
 
-    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    camera = new Camera(glm::vec3(0.0f, 3.0f, 3.0f));
 }
 
 

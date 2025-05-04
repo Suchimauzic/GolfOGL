@@ -2,8 +2,8 @@
 #define GAME_HPP
 
 #include "Window.hpp"
-#include "Objects/Cube.hpp"
-#include "Objects/Sphere.hpp"
+#include "Primitives/Cube.hpp"
+#include "Primitives/Sphere.hpp"
 #include "Shader.hpp"
 
 class Game

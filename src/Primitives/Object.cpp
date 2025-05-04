@@ -1,7 +1,12 @@
-#include "Objects/Object.hpp"
+#include "Primitives/Object.hpp"
 
 Object::Object() : model(glm::mat4(1.0f))
 {
+}
+
+Object::~Object()
+{
+    delete mesh;
 }
 
 void Object::render(Camera* camera, Shader* shader, int width, int height)
@@ -18,7 +23,7 @@ void Object::render(Camera* camera, Shader* shader, int width, int height)
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
     shader->setMat4("model", model);
 
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
 }
 
 void Object::setPosition(const glm::vec3 position)

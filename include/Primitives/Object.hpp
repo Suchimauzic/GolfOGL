@@ -7,6 +7,9 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
+#include "Components/Mesh.hpp"
+#include "Components/Vertex.hpp"
+
 #include <vector>
 
 class Object
@@ -25,8 +28,7 @@ public:
     glm::vec3 getRotation();
 
 protected:
-    std::vector<float> vertices;
-    std::vector<int> indices;
+    Mesh* mesh;
     
     unsigned int VAO, VBO, EBO;
 
@@ -41,7 +43,7 @@ protected:
     glm::vec3 rotation;
 
     Object();
-    virtual ~Object() = default;
+    virtual ~Object();
 
     virtual void generate();
 };

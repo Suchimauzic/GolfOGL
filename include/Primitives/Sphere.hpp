@@ -7,7 +7,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 
-#include "Objects/Object.hpp"
+#include "Primitives/Object.hpp"
 
 #include <vector>
 #include <cmath>
