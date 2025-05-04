@@ -16,11 +16,11 @@ Cube::Cube() : Object()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndices().size() * sizeof(int), mesh->getIndices().data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
 }
@@ -51,28 +51,43 @@ void Cube::generate()
 
     std::vector<Vertex> vertices;
 
-    Vertex vertex(glm::vec3(-0.5f,  0.5f,  0.5f));
+    // Vertex 1
+    Vertex vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.25f, 0.4f, 0.6f));
     vertices.push_back(vertex);
 
-    vertex.position = glm::vec3(-0.5f, -0.5f,  0.5f);
+    // Vertex 2
+    vertex.position = glm::vec3(-0.5f, -0.5f, 0.5f);
+    vertex.color = glm::vec3(0.34f, 0.62f, 0.3f);
     vertices.push_back(vertex);
     
-    vertex.position = glm::vec3(0.5f, -0.5f,  0.5f);
+    // Vertex 3
+    vertex.position = glm::vec3(0.5f, -0.5f, 0.5f);
+    vertex.color = glm::vec3(0.54f, 0.1f, 0.92f);
     vertices.push_back(vertex);
 
-    vertex.position = glm::vec3(0.5f,  0.5f,  0.5f);
+    // Vertex 4
+    vertex.position = glm::vec3(0.5f, 0.5f, 0.5f);
+    vertex.color = glm::vec3(0.41f, 0.32f, 0.24f);
     vertices.push_back(vertex);
 
-    vertex.position = glm::vec3(-0.5f,  0.5f, -0.5f);
+    // Vertex 5
+    vertex.position = glm::vec3(-0.5f, 0.5f, -0.5f);
+    vertex.color = glm::vec3(0.54f, 0.1f, 0.92f);
     vertices.push_back(vertex);
 
+    // Vertex 6
     vertex.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+    vertex.color = glm::vec3(0.34f, 0.62f, 0.3f);
     vertices.push_back(vertex);
 
+    // Vertex 7
     vertex.position = glm::vec3(0.5f, -0.5f, -0.5f);
+    vertex.color = glm::vec3(0.25f, 0.4f, 0.6f);
     vertices.push_back(vertex);
 
-    vertex.position = glm::vec3(0.5f,  0.5f, -0.5f);
+    // Vertex 8
+    vertex.position = glm::vec3(0.5f, 0.5f, -0.5f);
+    vertex.color = glm::vec3(0.41f, 0.32f, 0.24f);
     vertices.push_back(vertex);
 
     std::vector<int> indices = 

@@ -19,11 +19,11 @@ Sphere::Sphere(float radius, int sectorCount, int stackCount)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndices().size() * sizeof(float), mesh->getIndices().data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
 }
@@ -65,10 +65,14 @@ void Sphere::generate()
             y = xy * sinf(sectorAngel);
 
             Vertex vertex(glm::vec3(x, y, z));
-            vertices.push_back(vertex);
 
-            // for (int k = 0; k < 3; ++k)
-            //     vertices.push_back(i / (sectorCount / 2));
+            for (int k = 0; k < 3; ++k)
+            {
+                float color = i / (sectorCount / 2);
+                vertex.color = glm::vec3(color, color, color);
+            }
+
+            vertices.push_back(vertex);
         }
     }    
 
