@@ -26,6 +26,31 @@ public:
     glm::vec3 getPosition();
     glm::vec3 getSize();
     glm::vec3 getRotation();
+    Mesh* getMesh()
+    {
+        return mesh;
+    }
+
+    glm::mat4 getModelMatrix()
+    {
+        return model;
+    }
+
+    std::vector<glm::vec3> getWorldVertices()
+    {
+        std::vector<glm::vec3> worldVertices;
+        std::vector<Vertex> meshVertices = mesh->getVertices();
+
+        for (int i = 0; i < meshVertices.size(); ++i)
+        {
+            worldVertices.push_back(glm::vec3
+            (
+                this->getModelMatrix() * glm::vec4(meshVertices[i].position, 1.0f)
+            ));
+        }
+
+        return worldVertices;
+    }
 
 protected:
     Mesh* mesh;

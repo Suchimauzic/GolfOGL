@@ -39,7 +39,6 @@ if (NOT EXISTS ${OUTPUT_DIR}/res)
     )
 endif()
 
-
 # Copy res directory in build
 add_custom_command(TARGET ${PROJECT_NAME}
     PRE_BUILD
