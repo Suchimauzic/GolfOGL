@@ -28,7 +28,7 @@ namespace Logger
     static void setConsoleFontColor(Color color)
     {
 #ifdef _WIN32
-        SetConsoleAttribute(GetStdHandle(STD_OUTPUT_HANDLE), static_cast<int>(color));
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), static_cast<int>(color));
 #else
         std::cout << "\033[" << static_cast<int>(color) << "m";
 #endif

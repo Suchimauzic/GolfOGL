@@ -36,9 +36,14 @@ Camera::Camera(
     updateCameraVectors();
 }
 
-glm::mat4 Camera::getViewMatrix()
+glm::mat4 Camera::getViewMatrix() const
 {
     return glm::lookAt(position, position + front, up);
+}
+
+float Camera::getZoom() const
+{
+    return zoom;
 }
 
 void Camera::proccessKeyboard(CameraMovement direction, float deltaTime)
@@ -97,7 +102,8 @@ void Camera::proccessMouseScroll(float yOffset)
 
 void Camera::updateCameraVectors()
 {
-    glm::vec3 front = glm::vec3(
+    glm::vec3 front = glm::vec3
+    (
         cos(glm::radians(yaw)) * cos(glm::radians(pitch)),  // x
         sin(glm::radians(pitch)),                           // y
         sin(glm::radians(yaw)) * cos(glm::radians(pitch))   // z

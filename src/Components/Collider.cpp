@@ -1,34 +1,44 @@
 #include "Components/Collider.hpp"
 
-bool Collider::isCollision(const std::vector<glm::vec3>& pointA, const std::vector<glm::vec3>& pointB)
+bool Collider::isCollision(const std::vector<glm::vec3>& verticesA, const std::vector<glm::vec3>& verticesB)
 {
+    // First support point
     glm::vec3 direction = glm::vec3(1.0f, 0.0f, 0.0f);
-    glm::vec3 support = supportPoint(pointA, pointB, direction);
+    glm::vec3 support = supportVertex(verticesA, verticesB, direction);
 
-    Simplex simplexPoints;
-    simplexPoints.push_front(support);
+    Simplex simplex;
+    // First simplex point
+    simplex.push_front(support);
 
+    // Direction is towards to origin
     direction = -support;
 
     while (true)
     {
-        support = supportPoint(pointA, pointB, direction);
+        // New support point
+        support = supportVertex(verticesA, verticesB, direction);
 
         if (glm::dot(support, direction) <= 0)
+        {
             return false;
+        }
         
-            simplexPoints.push_front(support);
+        simplex.push_front(support);
 
-        if (nextSimplex(simplexPoints, direction))
+        // Check collision
+        if (nextSimplex(simplex, direction))
+        {
             return true;
+        }
     }
 }
 
-glm::vec3 Collider::findFurthestPoint(const std::vector<glm::vec3>& vertices, const glm::vec3& direction)
+glm::vec3 Collider::findFurthestVertex(const std::vector<glm::vec3>& vertices, const glm::vec3& direction)
 {
     glm::vec3 maxVertex;
     float maxDistance = -FLT_MAX;
 
+    // Recieve furthest vertex
     for (glm::vec3 vertex : vertices)
     {
         float distance = glm::dot(vertex, direction);
@@ -43,12 +53,17 @@ glm::vec3 Collider::findFurthestPoint(const std::vector<glm::vec3>& vertices, co
     return maxVertex;
 }
 
-glm::vec3 Collider::supportPoint(const std::vector<glm::vec3>& pointA, const std::vector<glm::vec3>& pointB, const glm::vec3 direction)
+glm::vec3 Collider::supportVertex
+(
+    const std::vector<glm::vec3>& verticesA,
+    const std::vector<glm::vec3>& verticesB,
+    const glm::vec3& direction)
 {
-    glm::vec3 furthestPointA = findFurthestPoint(pointA, direction);
-    glm::vec3 furthestPointB = findFurthestPoint(pointB, -direction);
+    glm::vec3 furthestVertexA = findFurthestVertex(verticesA, direction);
+    glm::vec3 furthestVertexB = findFurthestVertex(verticesB, -direction);
 
-    return furthestPointA - furthestPointB;
+    // Minkowski difference
+    return furthestVertexA - furthestVertexB;
 }
 
 bool Collider::nextSimplex(Simplex& simplex, glm::vec3& direction)

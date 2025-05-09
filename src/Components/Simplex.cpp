@@ -13,12 +13,12 @@ Simplex::Simplex()
     )
 {}
 
-Simplex& Simplex::operator=(std::array<glm::vec3, 4> array)
+Simplex& Simplex::operator=(std::vector<glm::vec3> points)
 {
-    for (unsigned int point = 0; point < array.size(); ++point)
-        vertices[point] = array[point];
+    for (unsigned int point = 0; point < points.size(); ++point)
+        vertices[point] = points[point];
 
-    size = array.size();
+    size = points.size();
     return *this;
 }
 

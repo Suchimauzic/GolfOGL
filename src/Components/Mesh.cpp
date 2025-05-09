@@ -3,9 +3,7 @@
 Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<int>& indices)
     : vertices(vertices),
       indices(indices)
-{
-
-}
+{}
 
 std::vector<Vertex> Mesh::getVertices() const
 {

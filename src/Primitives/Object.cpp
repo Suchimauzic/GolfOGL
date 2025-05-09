@@ -12,7 +12,7 @@ Object::~Object()
 void Object::render(Camera* camera, Shader* shader, int width, int height)
 {
     shader->use();
-    projection = glm::perspective(glm::radians(camera->zoom), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader->setMat4("projection", projection);
 
     view = camera->getViewMatrix();
@@ -44,19 +44,45 @@ void Object::setRotation(const float angle, const glm::vec3 rotation)
     model = glm::rotate(model, glm::radians(angle), rotation);
 }
 
-glm::vec3 Object::getPosition()
+glm::vec3 Object::getPosition() const
 {
     return position;
 }
 
-glm::vec3 Object::getSize()
+glm::vec3 Object::getSize() const
 {
     return size;
 }
 
-glm::vec3 Object::getRotation()
+glm::vec3 Object::getRotation() const
 {
     return rotation;
+}
+
+Mesh* Object::getMesh()
+{
+    return mesh;
+}
+
+glm::mat4 Object::getModel() const
+{
+    return model;
+}
+
+std::vector<glm::vec3> Object::getWorldVertices() const
+{
+    std::vector<glm::vec3> worldVertices;
+    std::vector<Vertex> meshVertices = mesh->getVertices();
+
+    for (int i = 0; i < meshVertices.size(); ++i)
+    {
+        worldVertices.push_back(glm::vec3
+        (
+            this->getModel() * glm::vec4(meshVertices[i].position, 1.0f)
+        ));
+    }
+
+    return worldVertices;
 }
 
 void Object::generate()

@@ -10,21 +10,24 @@
 /*
 ======================================
     The program uses GJK algorithm
-    to find a collision
+    to detect a collision
 ======================================
 */
 
 class Collider
 {
 public:
-    bool isCollision(const std::vector<glm::vec3>& pointA, const std::vector<glm::vec3>& pointB);
-    glm::vec3 findFurthestPoint(const std::vector<glm::vec3>& vertices, const glm::vec3& direction);
+    bool isCollision(const std::vector<glm::vec3>& verticesA, const std::vector<glm::vec3>& verticesB);
+    
 
-    glm::vec3 supportPoint
+private:
+    glm::vec3 findFurthestVertex(const std::vector<glm::vec3>& vertices, const glm::vec3& direction);
+
+    glm::vec3 supportVertex
     (
-        const std::vector<glm::vec3>& pointA,
-        const std::vector<glm::vec3>& pointB,
-        const glm::vec3 direction
+        const std::vector<glm::vec3>& verticesA,
+        const std::vector<glm::vec3>& verticesB,
+        const glm::vec3& direction
     );
 
     bool nextSimplex(Simplex& simplex, glm::vec3& direction);

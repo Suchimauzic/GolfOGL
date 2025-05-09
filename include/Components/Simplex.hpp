@@ -10,7 +10,7 @@ class Simplex
 public:
     Simplex();
     
-    Simplex& operator=(std::array<glm::vec3, 4> array);
+    Simplex& operator=(std::vector<glm::vec3> points);
     glm::vec3& operator[](unsigned int i);
 
     void push_front(glm::vec3 vertex);
