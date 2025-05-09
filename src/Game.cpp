@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-#include "Components/Collider.hpp"
+
 
 Game::Game(int width, int height, const char* title)
 {
@@ -14,9 +14,12 @@ Game::~Game()
 
 void Game::gameLoop()
 {
-    // Cube* cube = new Cube();
     Cube* place = new Cube();
     Sphere* sphere = new Sphere(1, 30, 30);
+
+    Renderer renderer;
+    renderer.addObject(*place);
+    renderer.addObject(*sphere);
 
     Shader shader("res/shaders/shader.vert", "res/shaders/shader.frag");
 
@@ -25,8 +28,6 @@ void Game::gameLoop()
 
     sphere->setSize(glm::vec3(0.4f, 0.4f, 0.4f));
     sphere->setPosition(glm::vec3(0.0f, 15.0f, 0.0f));
-
-    // cube->setPosition(glm::vec3(0.0f, 4.0f, 0.0f));
 
     Collider collider;
 
@@ -45,22 +46,20 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        place->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
-        // cube->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
-        sphere->render(window->getCamera(), &shader, GameConfig::width, GameConfig::height);
+        renderer.draw(window->getCamera(), &shader);
 
         window->swapBuffers();
 
-        // std::vector<glm::vec3> worldCubePos = cube->getWorldVertices();
         std::vector<glm::vec3> worldPlacePos = place->getWorldVertices();
         std::vector<glm::vec3> worldSpherePos = sphere->getWorldVertices();
 
         if (!collider.isCollision(worldSpherePos, worldPlacePos))
+        {
             sphere->setPosition((sphere->getPosition() - glm::vec3(0.0f, 9.81f, 0.0f)) * window->getDeltaTime());
+        }
     }
 
     delete place;
-    // delete cube;
     delete sphere;
 }
 
