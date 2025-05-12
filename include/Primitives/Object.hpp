@@ -9,6 +9,7 @@
 
 #include "Components/Mesh.hpp"
 #include "Components/Vertex.hpp"
+#include "Components/Texture.hpp"
 
 #include <vector>
 
@@ -32,6 +33,7 @@ public:
 
 protected:
     Mesh* mesh;
+    Texture* texture;
     
     unsigned int VAO, VBO, EBO;
 

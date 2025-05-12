@@ -6,11 +6,16 @@ Object::Object() : model(glm::mat4(1.0f))
 
 Object::~Object()
 {
+    if (texture != nullptr)
+        delete texture;
     delete mesh;
 }
 
 void Object::render(Camera* camera, Shader* shader, int width, int height)
 {
+    if (texture != nullptr)
+        glBindTexture(GL_TEXTURE_2D, texture->getId());
+
     shader->use();
     projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader->setMat4("projection", projection);

@@ -26,7 +26,7 @@ include_directories(${PROJECT_INCLUDE_PATH})
 file(GLOB_RECURSE CPPS ${PROJECT_CPP_PATH})
 
 add_executable(${PROJECT_NAME} ${CPPS})
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad glm stb_image)
 
 
 # Checking resources

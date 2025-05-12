@@ -5,6 +5,8 @@ Sphere::Sphere(float radius, int sectorCount, int stackCount)
 {
     generate();
 
+    texture = new Texture("res/Textures/GolfBallTexture.jpg");
+
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
 
@@ -25,6 +27,9 @@ Sphere::Sphere(float radius, int sectorCount, int stackCount)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
     glEnableVertexAttribArray(1);
 
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texture));
+    glEnableVertexAttribArray(2);
+
     glBindVertexArray(0);
 }
 
@@ -43,7 +48,8 @@ void Sphere::generate()
     vertices.clear();
     indices.clear();
 
-    float x, y, z, xy;
+    float xPos, yPos, zPos, xyPos;  // position
+    float xTexture, yTexture;
     
     float sectorStep = 2 * M_PI / sectorCount;
     float stackStep = M_PI / stackCount;
@@ -54,23 +60,68 @@ void Sphere::generate()
     for (int i = 0; i <= stackCount; ++i)
     {
         stackAngle = M_PI / 2 - i * stackStep;
-        xy = radius * cosf(stackAngle);
-        z = radius * sinf(stackAngle);
+        xyPos = radius * cosf(stackAngle);
+        zPos = radius * sinf(stackAngle);
 
         for (int j = 0; j <= sectorCount; ++j)
         {
             sectorAngel = j * sectorStep;
 
-            x = xy * cosf(sectorAngel);
-            y = xy * sinf(sectorAngel);
+            xPos = xyPos * cosf(sectorAngel);
+            yPos = xyPos * sinf(sectorAngel);
 
-            Vertex vertex(glm::vec3(x, y, z));
 
-            for (int k = 0; k < 3; ++k)
+            // Texture coords
+
+            float absX = fabs(xPos);
+            float absY = fabs(yPos);
+            float absZ = fabs(zPos);
+
+            if (absX >= absY && absX >= absZ)
             {
-                float color = i / (sectorCount / 2);
-                vertex.color = glm::vec3(color, color, color);
+                float invAbsX = 1.0f / absX;
+                if (xPos > 0)
+                {
+                    xTexture = zPos;
+                }
+                else
+                {
+                    xTexture = -zPos;
+                }
+
+                xTexture /= absX;
+                yTexture = yPos / absX;
             }
+            else if (absY >= absZ)
+            {
+                xTexture = xPos / absY;
+
+                if (yPos > 0)
+                {
+                    yTexture = zPos;
+                }
+                else
+                {
+                    yTexture = -zPos;
+                }
+
+                yTexture /= absY;
+            }
+            else
+            {
+                xTexture = xPos / absZ;
+                yTexture = yPos / absZ;
+            }
+
+            xTexture = 0.5f * (xTexture + 1.0f);
+            yTexture = 0.5f * (yTexture + 1.0f);
+
+            Vertex vertex
+            (
+                glm::vec3(xPos, yPos, zPos),
+                glm::vec3(1.0f, 0.5f, 0.0f),
+                glm::vec2(xTexture, yTexture)
+            );
 
             vertices.push_back(vertex);
         }
@@ -78,7 +129,7 @@ void Sphere::generate()
 
     for (int i = 0; i < stackCount; ++i)
     {
-        k1 = i* (sectorCount + 1);
+        k1 = i * (sectorCount + 1);
         k2 = k1 + sectorCount + 1;
 
         for (int j = 0; j < sectorCount; ++j, ++k1, ++k2)
