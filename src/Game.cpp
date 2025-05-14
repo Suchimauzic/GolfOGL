@@ -3,6 +3,8 @@
 Game::Game(int width, int height, const char* title)
 {
     window = new Window(width, height, title);
+
+    TextureManager::initTextureManager();
 }
 
 Game::~Game()
@@ -13,16 +15,16 @@ Game::~Game()
 void Game::gameLoop()
 {
     Sphere* sphere = new Sphere(1, 32, 32);
-    // Cube* place = new Cube();
+    Cube* cube = new Cube();
+
+    TextureManager::loadTexture("res/Textures/GolfBallTexture.jpg", "GolfBall");
+    sphere->loadTexture("GolfBall");
 
     Renderer renderer;
-    // renderer.addObject(*place);
     renderer.addObject(*sphere);
+    renderer.addObject(*cube);
 
-    Shader shader("res/shaders/shader.vs", "res/shaders/shader.fs");
-
-    // place->setSize(glm::vec3(10.0f, 0.01f, 10.0f));
-    // place->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
+    Shader shader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs");
 
     sphere->setSize(glm::vec3(0.2f, 0.2f, 0.2f));
     sphere->setPosition(glm::vec3(0.0f, 15.0f, 0.0f));
@@ -47,17 +49,9 @@ void Game::gameLoop()
         renderer.draw(window->getCamera(), &shader);
 
         window->swapBuffers();
-
-        // std::vector<glm::vec3> worldPlacePos = place->getWorldVertices();
-        // std::vector<glm::vec3> worldSpherePos = sphere->getWorldVertices();
-
-    //     if (!collider.isCollision(worldSpherePos, worldPlacePos))
-    //     {
-    //         sphere->setPosition((sphere->getPosition() - glm::vec3(0.0f, 9.81f, 0.0f)) * window->getDeltaTime());
-    //     }
     }
 
-    // delete place;
+    delete cube;
     delete sphere;
 }
 

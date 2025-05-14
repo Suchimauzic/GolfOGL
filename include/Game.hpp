@@ -4,6 +4,7 @@
 #include "Window.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "TextureManager.hpp"
 
 #include "Primitives/Cube.hpp"
 #include "Primitives/Sphere.hpp"

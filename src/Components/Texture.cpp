@@ -1,13 +1,9 @@
 #include "Components/Texture.hpp"
 
-Texture::Texture(const char* path)
-    : id(loadTexture(path))
+Texture::Texture(const char* path, const std::string& name)
+    : id(loadTexture(path)),
+    name(name)
 {}
-
-Texture::~Texture()
-{
-
-}
 
 unsigned int Texture::loadTexture(const char* path)
 {
@@ -21,6 +17,7 @@ unsigned int Texture::loadTexture(const char* path)
 
     if (data)
     {
+        // Texture format
         GLenum format;
 
         if (nrComponents == 1)
@@ -36,6 +33,7 @@ unsigned int Texture::loadTexture(const char* path)
             format = GL_RGBA;
         }
 
+        // Texture parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -47,7 +45,7 @@ unsigned int Texture::loadTexture(const char* path)
     }
     else
     {
-        Logger::printError("Texture failed to load path: ");
+        Logger::printError("Texture failed to load path: " + *path);
     }
 
     stbi_image_free(data);
@@ -55,7 +53,12 @@ unsigned int Texture::loadTexture(const char* path)
     return textureId;
 }
 
-unsigned int Texture::getId()
+unsigned int Texture::getId() const
 {
     return id;
+}
+
+std::string Texture::getName() const
+{
+    return name;
 }

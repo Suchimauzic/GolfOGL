@@ -6,17 +6,21 @@
 
 #include "Shader.hpp"
 #include "Camera.hpp"
+#include "TextureManager.hpp"
 
 #include "Components/Mesh.hpp"
 #include "Components/Vertex.hpp"
 #include "Components/Texture.hpp"
 
 #include <vector>
+#include <string>
 
 class Object
 {
 public:
     virtual void render(Camera* camera, Shader* shader, int width, int height);
+
+    void loadTexture(const std::string& textureName);
 
     // Setters
     void setPosition(const glm::vec3 position);
@@ -33,9 +37,10 @@ public:
 
 protected:
     Mesh* mesh;
-    Texture* texture;
     
     unsigned int VAO, VBO, EBO;
+
+    std::string texture;
 
     // Matrices
     glm::mat4 model;

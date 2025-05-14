@@ -12,15 +12,17 @@
 class Texture
 {
 public:
-    Texture(const char* path);
-    ~Texture();
+    Texture(const char* path, const std::string& name);
+    ~Texture() = default;
 
     unsigned int loadTexture(const char* path);
 
-    unsigned int getId();
+    unsigned int getId() const;
+    std::string getName() const;
 
 private:
     unsigned int id;
+    std::string name;
 };
 
 #endif

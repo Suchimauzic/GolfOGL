@@ -7,7 +7,6 @@
 struct Vertex
 {
     glm::vec3 position;
-    glm::vec3 color;
     glm::vec2 texture;
 
     Vertex() = default;
@@ -15,11 +14,9 @@ struct Vertex
     Vertex
     (
         glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec2 texture = glm::vec2(0.0f, 0.0f)
     )
         : position(position),
-          color(color),
           texture(texture)
     {}
 };

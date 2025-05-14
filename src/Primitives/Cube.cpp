@@ -19,7 +19,7 @@ Cube::Cube() : Object()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -52,43 +52,47 @@ void Cube::generate()
 
     std::vector<Vertex> vertices;
 
-    // Vertex 1
-    Vertex vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.25f, 0.4f, 0.6f));
+    // Front
+
+    // Vertex 1 (Top left)
+    Vertex vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f));
     vertices.push_back(vertex);
 
-    // Vertex 2
+    // Vertex 2 (Bottom left)
     vertex.position = glm::vec3(-0.5f, -0.5f, 0.5f);
-    vertex.color = glm::vec3(0.34f, 0.62f, 0.3f);
+    vertex.texture = glm::vec2(0.0f, 0.0f);
     vertices.push_back(vertex);
     
-    // Vertex 3
+    // Vertex 3 (Bottom right)
     vertex.position = glm::vec3(0.5f, -0.5f, 0.5f);
-    vertex.color = glm::vec3(0.54f, 0.1f, 0.92f);
+    vertex.texture = glm::vec2(1.0f, 0.0f);
     vertices.push_back(vertex);
 
-    // Vertex 4
+    // Vertex 4 (Top right)
     vertex.position = glm::vec3(0.5f, 0.5f, 0.5f);
-    vertex.color = glm::vec3(0.41f, 0.32f, 0.24f);
+    vertex.texture = glm::vec2(1.0f, 1.0f);
     vertices.push_back(vertex);
 
-    // Vertex 5
+    // Back
+
+    // Vertex 5 (Top left)
     vertex.position = glm::vec3(-0.5f, 0.5f, -0.5f);
-    vertex.color = glm::vec3(0.54f, 0.1f, 0.92f);
+    vertex.texture = glm::vec2(0.0f, 1.0f);
     vertices.push_back(vertex);
 
-    // Vertex 6
+    // Vertex 6 (Bottom left)
     vertex.position = glm::vec3(-0.5f, -0.5f, -0.5f);
-    vertex.color = glm::vec3(0.34f, 0.62f, 0.3f);
+    vertex.texture = glm::vec2(0.0f, 0.0f);
     vertices.push_back(vertex);
 
-    // Vertex 7
+    // Vertex 7 (Bottom right)
     vertex.position = glm::vec3(0.5f, -0.5f, -0.5f);
-    vertex.color = glm::vec3(0.25f, 0.4f, 0.6f);
+    vertex.texture = glm::vec2(1.0f, 0.0f);
     vertices.push_back(vertex);
 
-    // Vertex 8
+    // Vertex 8 (Top right)
     vertex.position = glm::vec3(0.5f, 0.5f, -0.5f);
-    vertex.color = glm::vec3(0.41f, 0.32f, 0.24f);
+    vertex.texture = glm::vec2(1.0f, 1.0f);
     vertices.push_back(vertex);
 
     std::vector<int> indices = 

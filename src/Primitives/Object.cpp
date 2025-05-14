@@ -1,20 +1,18 @@
 #include "Primitives/Object.hpp"
 
-Object::Object() : model(glm::mat4(1.0f))
-{
-}
+Object::Object()
+    : model(glm::mat4(1.0f)),
+    texture("")
+{}
 
 Object::~Object()
 {
-    if (texture != nullptr)
-        delete texture;
     delete mesh;
 }
 
 void Object::render(Camera* camera, Shader* shader, int width, int height)
 {
-    if (texture != nullptr)
-        glBindTexture(GL_TEXTURE_2D, texture->getId());
+    glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture(texture).getId());
 
     shader->use();
     projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
@@ -29,6 +27,11 @@ void Object::render(Camera* camera, Shader* shader, int width, int height)
     shader->setMat4("model", model);
 
     glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
+}
+
+void Object::loadTexture(const std::string& textureName)
+{
+    texture = textureName;
 }
 
 void Object::setPosition(const glm::vec3 position)
@@ -91,5 +94,4 @@ std::vector<glm::vec3> Object::getWorldVertices() const
 }
 
 void Object::generate()
-{
-}
+{}
