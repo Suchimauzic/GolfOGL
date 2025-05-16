@@ -1,4 +1,4 @@
-#include "TextureManager.hpp"
+#include "Manager/TextureManager.hpp"
 
 std::vector<Texture2D> TextureManager::texture2DList = {};
 std::vector<TextureCubemap> TextureManager::textureCubemapList = {};

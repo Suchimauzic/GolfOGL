@@ -1,6 +1,7 @@
 #include "Core/Shader.hpp"
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const char* vertexPath, const char* fragmentPath, const std::string& name)
+    : name(name)
 {
     std::string vertexCode;
     std::string fragmentCode;
@@ -68,6 +69,11 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 void Shader::use()
 {
     glUseProgram(ID);
+}
+
+std::string Shader::getName() const
+{
+    return name;
 }
 
 void Shader::setBool(const std::string &name, bool value) const

@@ -15,10 +15,10 @@
 class Shader
 {
 public:
-    unsigned int ID;
-
-    Shader(const char* vertexPath, const char* fragmentPath);
+    Shader(const char* vertexPath, const char* fragmentPath, const std::string& name);
     void use();
+
+    std::string getName() const;
 
     // Uniform functions
     void setBool(const std::string &name, bool value) const;
@@ -35,6 +35,9 @@ public:
     void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
+    unsigned int ID;
+    std::string name;
+
     void checkCompileErrors(unsigned int shader, std::string type);
     void printLine();
 };

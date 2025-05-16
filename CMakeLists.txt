@@ -5,17 +5,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
+set(INC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+set(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 # Set variables
 set(PROJECT_INCLUDE_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Components
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Primitives
+    ${INC}/
+    ${INC}/Components
+    ${INC}/Core
+    ${INC}/Manager
+    ${INC}/Primitives
 )
 
 set(PROJECT_CPP_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Components/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Primitives/*.cpp
+    ${SRC}/*.cpp
+    ${SRC}/Components/*.cpp
+    ${SRC}/Core
+    ${SRC}/Manager
+    ${SRC}/Primitives/*.cpp
 )
 
 # Libs

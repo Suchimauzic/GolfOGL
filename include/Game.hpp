@@ -10,7 +10,8 @@
 
 #include "Components/Collider.hpp"
 
-#include "TextureManager.hpp"
+#include "Manager/TextureManager.hpp"
+#include "Manager/ShaderManager.hpp"
 
 class Game
 {

@@ -21,7 +21,7 @@ void Game::gameLoop()
     renderer.addObject(*sphere);
     renderer.addObject(*cube);
 
-    Shader shader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs");
+    ShaderManager::loadShader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs", "CubeShader");
 
     sphere->setSize(glm::vec3(0.2f, 0.2f, 0.2f));
     sphere->setPosition(glm::vec3(0.0f, -5.0f, 0.0f));
@@ -45,7 +45,7 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        renderer.draw(window->getCamera(), &shader);
+        renderer.draw(window->getCamera(), &ShaderManager::getShader("CubeShader"));
 
         window->swapBuffers();
 
