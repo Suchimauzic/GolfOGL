@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 
-#include "Logger.hpp"
+#include "Core/Logger.hpp"
 
 #include <string>
 

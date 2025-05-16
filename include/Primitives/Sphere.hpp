@@ -4,10 +4,11 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Shader.hpp"
-#include "Camera.hpp"
+#include "Core/Shader.hpp"
 
 #include "Primitives/Object.hpp"
+
+#include "Camera.hpp"
 
 #include <vector>
 #include <cmath>

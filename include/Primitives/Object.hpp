@@ -4,13 +4,14 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Shader.hpp"
-#include "Camera.hpp"
-#include "TextureManager.hpp"
+#include "Core/Shader.hpp"
 
 #include "Components/Mesh.hpp"
 #include "Components/Vertex.hpp"
 #include "Components/Texture.hpp"
+
+#include "Camera.hpp"
+#include "TextureManager.hpp"
 
 #include <vector>
 #include <string>

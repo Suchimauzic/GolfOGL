@@ -4,12 +4,14 @@
 #include <iostream>
 #include <cmath>
 
+#include "Core/Window.hpp"
+#include "Core/Shader.hpp"
+#include "Core/Logger.hpp"
+
 #include "Game.hpp"
-#include "Window.hpp"
 #include "GameConfig.hpp"
-#include "Shader.hpp"
 #include "Camera.hpp"
-#include "Logger.hpp"
+
 
 #include "Primitives/Object.hpp"
 #include "Primitives/Cube.hpp"

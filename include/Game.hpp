@@ -1,15 +1,16 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "Window.hpp"
-#include "Shader.hpp"
-#include "Renderer.hpp"
-#include "TextureManager.hpp"
+#include "Core/Window.hpp"
+#include "Core/Shader.hpp"
+#include "Core/Renderer.hpp"
 
 #include "Primitives/Cube.hpp"
 #include "Primitives/Sphere.hpp"
 
 #include "Components/Collider.hpp"
+
+#include "TextureManager.hpp"
 
 class Game
 {

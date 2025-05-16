@@ -5,7 +5,7 @@
 #include <stb_image.h>
 
 #include "Components/Texture.hpp"
-#include "Logger.hpp"
+#include "Core/Logger.hpp"
 
 #include <string>
 

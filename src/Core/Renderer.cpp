@@ -1,4 +1,4 @@
-#include "Renderer.hpp"
+#include "Core/Renderer.hpp"
 
 void Renderer::addObject(Object& object)
 {
