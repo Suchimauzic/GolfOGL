@@ -18,7 +18,7 @@ public:
     void addObject(Object& object);
     void removeObject(Object& object);
 
-    void draw(Camera* camera, Shader* shader);
+    void draw(Camera* camera);
 
 private:
     std::vector<Object*> objects;

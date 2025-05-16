@@ -10,8 +10,10 @@
 #include "Components/Vertex.hpp"
 #include "Components/Texture.hpp"
 
+#include "Manager/TextureManager.hpp"
+#include "Manager/ShaderManager.hpp"
+
 #include "Camera.hpp"
-#include "TextureManager.hpp"
 
 #include <vector>
 #include <string>
@@ -19,9 +21,10 @@
 class Object
 {
 public:
-    virtual void render(Camera* camera, Shader* shader, int width, int height);
+    virtual void render(Camera* camera, int width, int height);
 
     void loadTexture(const std::string& textureName);
+    void loadShader(const std::string& shaderName);
 
     // Setters
     void setPosition(const glm::vec3 position);
@@ -32,6 +35,7 @@ public:
     glm::vec3 getPosition() const;
     glm::vec3 getSize() const;
     glm::vec3 getRotation() const;
+    std::string getShader() const;
     Mesh* getMesh();
     glm::mat4 getModel() const;
     std::vector<glm::vec3> getWorldVertices() const;
@@ -41,7 +45,8 @@ protected:
     
     unsigned int VAO, VBO, EBO;
 
-    std::string texture;
+    std::string shaderName;
+    std::string textureName;
 
     // Matrices
     glm::mat4 model;

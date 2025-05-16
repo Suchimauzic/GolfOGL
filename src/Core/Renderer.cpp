@@ -16,10 +16,10 @@ void Renderer::removeObject(Object& object)
     }
 }
 
-void Renderer::draw(Camera* camera, Shader* shader)
+void Renderer::draw(Camera* camera)
 {
     for (Object* object : objects)
     {
-        object->render(camera, shader, GameConfig::width, GameConfig::height);
+        object->render(camera, GameConfig::width, GameConfig::height);
     }
 }

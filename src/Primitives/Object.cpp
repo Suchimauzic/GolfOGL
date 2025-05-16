@@ -2,7 +2,7 @@
 
 Object::Object()
     : model(glm::mat4(1.0f)),
-    texture("")
+    textureName("")
 {}
 
 Object::~Object()
@@ -10,10 +10,11 @@ Object::~Object()
     delete mesh;
 }
 
-void Object::render(Camera* camera, Shader* shader, int width, int height)
+void Object::render(Camera* camera, int width, int height)
 {
     // glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture2D(texture).getId());
 
+    Shader* shader = &ShaderManager::getShader(shaderName);
     shader->use();
     projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader->setMat4("projection", projection);
@@ -31,7 +32,12 @@ void Object::render(Camera* camera, Shader* shader, int width, int height)
 
 void Object::loadTexture(const std::string& textureName)
 {
-    texture = textureName;
+    this->textureName = textureName;
+}
+
+void Object::loadShader(const std::string& shaderName)
+{
+    this->shaderName = shaderName;
 }
 
 void Object::setPosition(const glm::vec3 position)
@@ -65,6 +71,11 @@ glm::vec3 Object::getSize() const
 glm::vec3 Object::getRotation() const
 {
     return rotation;
+}
+
+std::string Object::getShader() const
+{
+    return shaderName;
 }
 
 Mesh* Object::getMesh()
