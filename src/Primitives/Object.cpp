@@ -12,7 +12,7 @@ Object::~Object()
 
 void Object::render(Camera* camera, Shader* shader, int width, int height)
 {
-    glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture(texture).getId());
+    // glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture2D(texture).getId());
 
     shader->use();
     projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
@@ -92,6 +92,3 @@ std::vector<glm::vec3> Object::getWorldVertices() const
 
     return worldVertices;
 }
-
-void Object::generate()
-{}

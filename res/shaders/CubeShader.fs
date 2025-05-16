@@ -1,9 +1,9 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec2 textureOut;
+in vec3 textureOut;
 
-uniform sampler2D cubeTexture;
+uniform samplerCube cubeTexture;
 
 void main()
 {

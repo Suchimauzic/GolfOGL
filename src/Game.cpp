@@ -17,17 +17,16 @@ void Game::gameLoop()
     Sphere* sphere = new Sphere(1, 32, 32);
     Cube* cube = new Cube();
 
-    TextureManager::loadTexture("res/Textures/GolfBallTexture.jpg", "GolfBall");
-    sphere->loadTexture("GolfBall");
-
     Renderer renderer;
     renderer.addObject(*sphere);
     renderer.addObject(*cube);
 
-    Shader shader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs");
+    Shader shader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs");
 
     sphere->setSize(glm::vec3(0.2f, 0.2f, 0.2f));
-    sphere->setPosition(glm::vec3(0.0f, 15.0f, 0.0f));
+    sphere->setPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+
+    cube->setSize(glm::vec3(1.0f, 0.5f, 1.0f));
 
     Collider collider;
 
@@ -49,6 +48,16 @@ void Game::gameLoop()
         renderer.draw(window->getCamera(), &shader);
 
         window->swapBuffers();
+
+        std::vector<glm::vec3> worldSphere = sphere->getWorldVertices();
+        std::vector<glm::vec3> worldCube = cube->getWorldVertices();
+
+        if (collider.isCollision(worldSphere, worldCube))
+            Logger::printInfo("Collision detected");
+        else
+            Logger::printInfo("Collision is not detected");
+
+        sphere->setPosition(glm::vec3(0.0f, sin(glfwGetTime()) * 5.0f * window->getDeltaTime(), 0.0f));
     }
 
     delete cube;

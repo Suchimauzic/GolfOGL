@@ -55,7 +55,7 @@ protected:
     Object();
     virtual ~Object();
 
-    virtual void generate();
+    virtual void generate() = 0;
 };
 
 #endif

@@ -96,7 +96,7 @@ void Window::initWindow(int width, int height, const char* title)
     GameConfig::width = width;
     GameConfig::height = height;
 
-    camera = new Camera(glm::vec3(0.0f, 3.0f, 3.0f));
+    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
 

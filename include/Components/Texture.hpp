@@ -12,17 +12,17 @@
 class Texture
 {
 public:
-    Texture(const char* path, const std::string& name);
-    ~Texture() = default;
-
-    unsigned int loadTexture(const char* path);
+    virtual unsigned int loadTexture(const char* path) = 0;
 
     unsigned int getId() const;
     std::string getName() const;
 
-private:
+protected:
     unsigned int id;
     std::string name;
+
+    Texture(const std::string& name);
+    virtual ~Texture() = default;
 };
 
 #endif
