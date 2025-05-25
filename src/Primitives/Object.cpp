@@ -12,7 +12,7 @@ Object::~Object()
 
 void Object::render(Camera* camera, int width, int height)
 {
-    // glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture2D(texture).getId());
+    // glBindTexture(GL_TEXTURE_2D, TextureManager::getTexture2D(textureName).getId());
 
     Shader* shader = &ShaderManager::getShader(shaderName);
     shader->use();
