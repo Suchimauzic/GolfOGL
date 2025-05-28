@@ -35,7 +35,7 @@ void Game::gameLoop()
         window->proccessInput();
 
         // OpenGL
-        glClearColor(0.6f, 0.3f, 0.5f, 1.0f);
+        glClearColor(0.76f, 0.45f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
