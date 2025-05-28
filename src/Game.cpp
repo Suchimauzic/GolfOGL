@@ -1,6 +1,7 @@
 #include "Game.hpp"
 
 #include "Player.hpp"
+#include "FirstScene.hpp"
 
 Game::Game(int width, int height, const char* title)
 {
@@ -16,25 +17,14 @@ Game::~Game()
 
 void Game::gameLoop()
 {
-    Cube* cube = new Cube();
-    Player* player = new Player();
-
-    Renderer renderer;
-    renderer.addObject(*cube);
-    renderer.addObject(player->getObject());
-
     ShaderManager::loadShader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs", "CubeShader");
     ShaderManager::loadShader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs", "SphereShader");
 
-    cube->loadShader("CubeShader");
-    player->loadShader("CubeShader");
-
-    cube->setSize(glm::vec3(1.0f, 0.5f, 1.0f));
-
-    player->getObject().setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+    FirstScene* firstScene = new FirstScene();
 
     Collider collider;
 
+    bool check = true;
     while (!window->isShouldClose())
     {
         // deltaTime
@@ -50,17 +40,12 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        renderer.draw(window->getCamera());
+        Renderer::draw(window->getCamera());
 
         window->swapBuffers();
-
-        std::vector<glm::vec3> worldCube = cube->getWorldVertices();
-
-        player->update(window->getDeltaTime());
     }
 
-    delete cube;
-    delete player;
+    delete firstScene;
 }
 
 int Game::getWindowStatus()

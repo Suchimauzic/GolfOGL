@@ -1,24 +1,34 @@
 #include "Core/Renderer.hpp"
 
+std::vector<Object*> Renderer::objectsRender = {};
+
 void Renderer::addObject(Object& object)
 {
-    objects.push_back(&object);
+    objectsRender.push_back(&object);
+}
+
+void Renderer::addObjects(std::vector<Object*> objects)
+{
+    for (Object* object : objects)
+    {
+        objectsRender.push_back(&*object);
+    }
 }
 
 void Renderer::removeObject(Object& object)
 {
-    for (int i = 0; i < objects.size(); ++i)
+    for (int i = 0; i < objectsRender.size(); ++i)
     {
-        if (objects[i] == &object)
+        if (objectsRender[i] == &object)
         {
-            objects.erase(objects.begin() + i);
+            objectsRender.erase(objectsRender.begin() + i);
         }
     }
 }
 
 void Renderer::draw(Camera* camera)
 {
-    for (Object* object : objects)
+    for (Object* object : objectsRender)
     {
         object->render(camera, GameConfig::width, GameConfig::height);
     }

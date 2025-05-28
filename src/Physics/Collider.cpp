@@ -1,4 +1,4 @@
-#include "Components/Collider.hpp"
+#include "Physics/Collider.hpp"
 
 bool Collider::isCollision(const std::vector<glm::vec3>& verticesA, const std::vector<glm::vec3>& verticesB)
 {

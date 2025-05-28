@@ -21,6 +21,8 @@
 class Object
 {
 public:
+    virtual ~Object();
+
     virtual void render(Camera* camera, int width, int height);
 
     void loadTexture(const std::string& textureName);
@@ -59,7 +61,6 @@ protected:
     glm::vec3 rotation;
 
     Object();
-    virtual ~Object();
 
     virtual void generate() = 0;
 };

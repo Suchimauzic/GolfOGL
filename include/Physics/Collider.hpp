@@ -5,7 +5,7 @@
 
 #include "Components/Vertex.hpp"
 #include "Components/Mesh.hpp"
-#include "Components/Simplex.hpp"
+#include "Physics/Simplex.hpp"
 
 /*
 ======================================
@@ -18,7 +18,6 @@ class Collider
 {
 public:
     bool isCollision(const std::vector<glm::vec3>& verticesA, const std::vector<glm::vec3>& verticesB);
-    
 
 private:
     glm::vec3 findFurthestVertex(const std::vector<glm::vec3>& vertices, const glm::vec3& direction);

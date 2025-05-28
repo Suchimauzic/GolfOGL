@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-project(GolfOGL)
+project(LabyrinthOGL)
 
 set(CMAKE_CXX_STANDARD 17)
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
@@ -13,15 +13,19 @@ set(PROJECT_INCLUDE_PATH
     ${INC}/
     ${INC}/Components
     ${INC}/Core
+    ${INC}/GameElements
     ${INC}/Manager
+    ${INC}/Physics
     ${INC}/Primitives
 )
 
 set(PROJECT_CPP_PATH
     ${SRC}/*.cpp
     ${SRC}/Components/*.cpp
-    ${SRC}/Core
-    ${SRC}/Manager
+    ${SRC}/Core/*.cpp
+    ${INC}/GameElements/*.cpp
+    ${SRC}/Manager/*.cpp
+    ${SRC}/Physics/*.cpp
     ${SRC}/Primitives/*.cpp
 )
 

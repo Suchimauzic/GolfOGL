@@ -7,21 +7,22 @@
 #include "Primitives/Cube.hpp"
 #include "Primitives/Sphere.hpp"
 
-#include "vector"
+#include <vector>
 
 class Renderer
 {
 public:
-    Renderer() = default;
-    ~Renderer() = default;
+    // Renderer() = default;
+    // ~Renderer() = default;
 
-    void addObject(Object& object);
-    void removeObject(Object& object);
+    static void addObject(Object& object);
+    static void addObjects(std::vector<Object*> objects);
+    static void removeObject(Object& object);
 
-    void draw(Camera* camera);
+    static void draw(Camera* camera);
 
 private:
-    std::vector<Object*> objects;
+    static std::vector<Object*> objectsRender;
 };
 
 #endif

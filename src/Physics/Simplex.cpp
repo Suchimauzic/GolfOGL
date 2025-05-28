@@ -1,4 +1,4 @@
-#include "Components/Simplex.hpp"
+#include "Physics/Simplex.hpp"
 
 Simplex::Simplex()
     : size(0),

@@ -8,7 +8,7 @@
 #include "Primitives/Cube.hpp"
 #include "Primitives/Sphere.hpp"
 
-#include "Components/Collider.hpp"
+#include "Physics/Collider.hpp"
 
 #include "Manager/TextureManager.hpp"
 #include "Manager/ShaderManager.hpp"
