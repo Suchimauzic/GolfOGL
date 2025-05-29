@@ -34,7 +34,7 @@ public:
     void setRotation(const float angle, const glm::vec3 rotation);
 
     // Getters
-    glm::vec3 getPosition() const;
+    glm::vec3 getPosition();
     glm::vec3 getSize() const;
     glm::vec3 getRotation() const;
     std::string getShader() const;
@@ -59,6 +59,7 @@ protected:
     glm::vec3 position;
     glm::vec3 size;
     glm::vec3 rotation;
+    float angle;
 
     Object();
 

@@ -58,7 +58,7 @@ void Object::setRotation(const float angle, const glm::vec3 rotation)
     model = glm::rotate(model, glm::radians(angle), rotation);
 }
 
-glm::vec3 Object::getPosition() const
+glm::vec3 Object::getPosition()
 {
     return position;
 }

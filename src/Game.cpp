@@ -40,7 +40,7 @@ void Game::gameLoop()
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        Renderer::draw(window->getCamera());
+        window->render();
 
         window->swapBuffers();
     }

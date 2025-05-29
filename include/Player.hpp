@@ -1,6 +1,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <glm/glm.hpp>
+
 #include "Primitives/Sphere.hpp"
 
 #include "Physics/Gravity.hpp"
@@ -28,16 +30,24 @@ public:
     
     // Setters
     void setStatus(PlayerStatus status);
+    void setPosition(glm::vec3 position);
+    void setRotation(float angle, glm::vec3 rotation);
+    void setSize(glm::vec3 size);
+    void setSpeed(float speed);
 
     // Getters
     Sphere& getObject();
     Gravity& getGravity();
     PlayerStatus getStatus() const;
+    glm::vec3 getPosition();
+    float getSpeed();
 
 private:
     Sphere* sphere;
     Gravity* gravity;
     Collider* collider;
+
+    float speed;
 
     PlayerStatus status;
 };

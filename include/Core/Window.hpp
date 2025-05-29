@@ -9,7 +9,10 @@
 
 #include "Camera.hpp"
 #include "GameConfig.hpp"
-#include "Logger.hpp"
+#include "Core/Logger.hpp"
+
+#include "FirstScene.hpp"
+
 
 class Window
 {
@@ -25,15 +28,15 @@ public:
     void proccessInput();
 
     void updateDeltaTime(float currentFrame);
+    void render();
 
     // Getters
     int getCodeStatus();
     float getDeltaTime();
-    Camera* getCamera();
 
 private:
-    // Camera
-    static Camera* camera;
+    // First level
+    static FirstScene* firstScene;
 
     // Window attributes
     GLFWwindow* window;

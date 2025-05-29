@@ -36,6 +36,10 @@ public:
     void proccessMouseMovement(float xOffest, float yOffset, GLboolean constraintPitch = true);
     void proccessMouseScroll(float yOffset);
 
+    void setPosition(glm::vec3 position, float deltaTime);
+    void updatePosition(glm::vec3 position);
+    void setPitch(float angle);
+
 private:
     static constexpr float PITCH = 0.0f;
     static constexpr float YAW = -90.0f;

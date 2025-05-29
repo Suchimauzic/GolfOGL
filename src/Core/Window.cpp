@@ -2,7 +2,7 @@
 
 // Variables
 
-Camera* Window::camera = nullptr;
+FirstScene* Window::firstScene = nullptr;
 
 float Window::lastX = 0.0f;
 float Window::lastY = 0.0f;
@@ -17,11 +17,13 @@ Window::Window(int width, int height, const char* title)
     codeStatus = 0;
 
     initWindow(width, height, title);
+
+    firstScene = new FirstScene();
 }
 
 Window::~Window()
 {
-    delete camera;
+    delete firstScene;
     glfwTerminate();
 }
 
@@ -95,8 +97,6 @@ void Window::initWindow(int width, int height, const char* title)
 
     GameConfig::width = width;
     GameConfig::height = height;
-
-    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
 
@@ -119,23 +119,18 @@ void Window::pollEvents()
 
 void Window::proccessInput()
 {
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera->proccessKeyboard(CameraMovement::FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera->proccessKeyboard(CameraMovement::BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera->proccessKeyboard(CameraMovement::LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera->proccessKeyboard(CameraMovement::RIGHT, deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, 1);
+    firstScene->processInput(window, deltaTime);
 }
 
 void Window::updateDeltaTime(float currentFrame)
 {
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
+}
+
+void Window::render()
+{
+    Renderer::draw(&firstScene->getCamera());
 }
 
 
@@ -149,11 +144,6 @@ int Window::getCodeStatus()
 float Window::getDeltaTime()
 {
     return deltaTime;
-}
-
-Camera* Window::getCamera()
-{
-    return camera;
 }
 
 
@@ -175,10 +165,12 @@ void Window::mouseCallback(GLFWwindow* window, double xPosMouse, double yPosMous
     lastX = xPos;
     lastY = yPos;
 
-    camera->proccessMouseMovement(xOffset, yOffset);
+    // camera->proccessMouseMovement(xOffset, yOffset);
+    // firstScene->getCamera().proccessMouseMovement(xOffset, yOffset);
 }
 
 void Window::scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-    camera->proccessMouseScroll(static_cast<float>(yOffset));
+    // camera->proccessMouseScroll(static_cast<float>(yOffset));
+    firstScene->getCamera().proccessMouseScroll(static_cast<float>(yOffset));
 }

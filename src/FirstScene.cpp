@@ -1,7 +1,5 @@
 #include "FirstScene.hpp"
 
-#include "GameElements/TurnElement.hpp"
-
 FirstScene::FirstScene()
 {
     generateLevel();
@@ -11,6 +9,11 @@ FirstScene::FirstScene()
 
 FirstScene::~FirstScene()
 {
+    Renderer::removeObject(player->getObject());
+
+    delete player;
+    delete camera;
+
     for (Object* object : levelObjects)
     {
         Renderer::removeObject(*object);
@@ -18,8 +21,64 @@ FirstScene::~FirstScene()
     }
 }
 
+void FirstScene::processInput(GLFWwindow* window, float deltaTime)
+{
+    float speed = player->getSpeed() * deltaTime;
+    glm::vec3 moveDirection(0.0f);
+
+    // Inputs
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        moveDirection.z -= 1.0f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        moveDirection.z += 1.0f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        moveDirection.x -= 1.0f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        moveDirection.x += 1.0f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, 1);
+    }
+
+
+    // Speed calculation
+
+    glm::vec3 playerNewPosition = player->getPosition();
+
+    // Need to move a player, now he's not move
+    // Maybe the player needs his own shader
+
+    if (moveDirection.x != 0.0f || moveDirection.z != 0.0f)
+    {
+        moveDirection = glm::normalize(moveDirection) * speed;
+        playerNewPosition = player->getPosition() + moveDirection;
+        player->setPosition(playerNewPosition);
+    }
+
+    camera->setPosition(playerNewPosition + glm::vec3(0.0f, 3.0f, 2.0f), deltaTime);
+}
+
+Camera& FirstScene::getCamera()
+{
+    return *camera;
+}
+
 void FirstScene::loadShader()
 {
+    player->loadShader("CubeShader");
+
     for (Object* object : levelObjects)
     {
         object->loadShader("CubeShader");
@@ -28,6 +87,8 @@ void FirstScene::loadShader()
 
 void FirstScene::loadRenderer()
 {
+    Renderer::addObject(player->getObject());
+
     for (Object* object : levelObjects)
     {
         Renderer::addObject(*object);
@@ -36,6 +97,12 @@ void FirstScene::loadRenderer()
 
 void FirstScene::generateLevel()
 {
+    player = new Player();
+    player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
+
+    camera = new Camera(glm::vec3(-4.5f, 2.25f, 6.0f));
+    camera->setPitch(-60.0f);
+
     // Floor
     Cube* cube = new Cube();
     cube->setPosition(glm::vec3(0.0f, -1.0f, 0.0f));

@@ -94,10 +94,26 @@ void Camera::proccessMouseScroll(float yOffset)
 {
     zoom -= (float)yOffset;
 
-    if (zoom < 1.0f)
-        zoom = 1.0f;
+    if (zoom < 20.0f)
+        zoom = 20.0f;
     else if (zoom > 45.0f)
         zoom = 45.0f;
+}
+
+void Camera::setPosition(glm::vec3 position, float deltaTime)
+{
+    this->position = position;
+}
+
+void Camera::updatePosition(glm::vec3 position)
+{
+    this->position += position;
+}
+
+void Camera::setPitch(float angle)
+{
+    pitch = angle;
+    updateCameraVectors();
 }
 
 void Camera::updateCameraVectors()

@@ -24,7 +24,7 @@ protected:
     glm::vec3 position;
     float rotation;
     
-    GameElement();    
+    GameElement();
 };
 
 #endif
