@@ -264,16 +264,296 @@ void FirstScene::generateLevel()
 
     cube = new Cube();
     cube->setPosition(glm::vec3(4.0f, -0.5f, 4.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
     levelObjects.push_back(cube);
 
     cube = new Cube();
     cube->setPosition(glm::vec3(4.0f, -0.5f, 3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.5f, -0.5f, 3.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.0f, -0.5f, 1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.0f, -0.5f, 0.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.5f, -0.5f, 0.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.5f, -0.5f, 0.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.5f, -0.5f, 2.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.0f, -0.5f, 1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.0f, -0.5f, 0.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.0f, -0.5f, -0.55f));
     cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
     levelObjects.push_back(cube);
-    
+
     cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, 3.5f));
+    cube->setPosition(glm::vec3(3.0f, -0.5f, -1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.5f, -0.5f, -3.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.0f, -0.5f, -1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(4.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(3.55f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.5f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.0f, -0.5f, -4.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.5f, -0.5f, -2.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.0f, -0.5f, -1.55f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.0f, -0.5f, -0.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(2.0f, -0.5f, 0.55f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(1.5f, -0.5f, 1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(1.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(0.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-0.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-3.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.5f, -0.5f, -1.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.0f, -0.5f, -0.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.5f, -0.5f, 0.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-3.5f, -0.5f, 0.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.0f, -0.5f, 0.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.0f, -0.5f, 1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-3.0f, -0.5f, -1.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-3.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-3.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-4.5f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.5f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-2.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-1.5f, -0.5f, -2.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-0.5f, -0.5f, -2.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(1.0f, -0.5f, -2.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(1.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-1.0f, -0.5f, -3.5f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(0.5f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-0.5f, -0.5f, -4.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    levelObjects.push_back(cube);
+
+    cube = new Cube();
+    cube->setPosition(glm::vec3(-0.5f, -0.5f, -3.0f));
+    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
     levelObjects.push_back(cube);
 }
