@@ -63,6 +63,11 @@ glm::vec3 Object::getPosition()
     return position;
 }
 
+glm::vec3 Object::getGlobalPosition()
+{
+    return glm::vec3(model[3]);
+}
+
 glm::vec3 Object::getSize() const
 {
     return size;
@@ -97,7 +102,7 @@ std::vector<glm::vec3> Object::getWorldVertices() const
     {
         worldVertices.push_back(glm::vec3
         (
-            this->getModel() * glm::vec4(meshVertices[i].position, 1.0f)
+            model * glm::vec4(meshVertices[i].position, 1.0f)
         ));
     }
 

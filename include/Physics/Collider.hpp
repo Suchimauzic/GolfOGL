@@ -3,6 +3,10 @@
 
 #include <glm/glm.hpp>
 
+#include <cmath>
+#include <stdexcept>
+#include <iostream>
+
 #include "Components/Vertex.hpp"
 #include "Components/Mesh.hpp"
 #include "Physics/Simplex.hpp"
@@ -34,6 +38,9 @@ private:
     bool lineSimplex(Simplex& simplex, glm::vec3& direction);
     bool triangleSimplex(Simplex& simplex, glm::vec3& direction);
     bool tetrahedronSimplex(Simplex& simplex, glm::vec3& direction);
+
+    bool isValid(const glm::vec3& vertex);
+    bool isValid(const std::vector<glm::vec3>& vertices);
 };
 
 #endif

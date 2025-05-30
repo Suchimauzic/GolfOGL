@@ -35,6 +35,7 @@ public:
 
     // Getters
     glm::vec3 getPosition();
+    glm::vec3 getGlobalPosition();
     glm::vec3 getSize() const;
     glm::vec3 getRotation() const;
     std::string getShader() const;

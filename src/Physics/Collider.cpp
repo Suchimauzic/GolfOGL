@@ -13,7 +13,7 @@ bool Collider::isCollision(const std::vector<glm::vec3>& verticesA, const std::v
     // Direction is towards to origin
     direction = -support;
 
-    while (true)
+    for (int i = 0; i < 100; ++i)
     {
         // New support point
         support = supportVertex(verticesA, verticesB, direction);
@@ -31,6 +31,8 @@ bool Collider::isCollision(const std::vector<glm::vec3>& verticesA, const std::v
             return true;
         }
     }
+
+    return false;
 }
 
 glm::vec3 Collider::findFurthestVertex(const std::vector<glm::vec3>& vertices, const glm::vec3& direction)
@@ -183,6 +185,28 @@ bool Collider::tetrahedronSimplex(Simplex& simplex, glm::vec3& direction)
     if (sameDirection(adb, ao))
     {
         return triangleSimplex(simplex = { a, d, b }, direction);
+    }
+
+    return true;
+}
+
+bool Collider::isValid(const glm::vec3& vertex)
+{
+    return !
+    (
+        std::isnan(vertex.x) || std::isnan(vertex.y) || std::isnan(vertex.z) ||
+        std::isinf(vertex.x) || std::isinf(vertex.y) || std::isinf(vertex.z)
+    );
+}
+
+bool Collider::isValid(const std::vector<glm::vec3>& vertices)
+{
+    for (glm::vec3 vertex : vertices)
+    {
+        if (!isValid(vertex))
+        {
+            return false;
+        }
     }
 
     return true;

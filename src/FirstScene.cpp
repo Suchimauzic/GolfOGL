@@ -17,7 +17,7 @@ FirstScene::~FirstScene()
     for (Object* object : levelObjects)
     {
         Renderer::removeObject(*object);
-        delete object; 
+        delete object;
     }
 }
 
@@ -66,6 +66,23 @@ void FirstScene::processInput(GLFWwindow* window, float deltaTime)
     camera->updatePosition(playerNewPosition);
 }
 
+void FirstScene::checkCollision()
+{
+    glm::vec3 playerPos = player->getObject().getGlobalPosition();
+
+    for (Object* object : levelObjects)
+    {
+        glm::vec3 dir = glm::abs(object->getPosition() - playerPos);
+        if (dir.x > 0.5f || dir.z > 0.5f)
+            continue;
+        
+        if (player->isCollision(*object))
+        {
+            Logger::printInfo("Collision!");
+        }
+    }
+}
+
 Camera& FirstScene::getCamera()
 {
     return *camera;
@@ -93,11 +110,12 @@ void FirstScene::loadRenderer()
 
 void FirstScene::generateLevel()
 {
-    camera = new Camera(glm::vec3(-4.5f, -0.25f, 4.5f) + glm::vec3(0.0f, 3.0f, 2.0f));
+    camera = new Camera(glm::vec3(-4.5f, -0.25f, 4.5f) + glm::vec3(0.0f, 2.0f, 1.25f));
     camera->setPitch(-60.0f);
 
     player = new Player();
     player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
+    
 
     // Floor
     Cube* cube = new Cube();

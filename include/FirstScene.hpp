@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Core/Renderer.hpp"
+#include "Core/Logger.hpp"
 
 #include "Primitives/Cube.hpp"
 
@@ -21,6 +22,7 @@ public:
 
     void processInput(GLFWwindow* window, float deltaTime);
 
+    void checkCollision();
     Camera& getCamera();
 
 private:

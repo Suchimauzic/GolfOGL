@@ -29,6 +29,7 @@ public:
 
     void updateDeltaTime(float currentFrame);
     void render();
+    void update();
 
     // Getters
     int getCodeStatus();

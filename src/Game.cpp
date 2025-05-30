@@ -1,8 +1,5 @@
 #include "Game.hpp"
 
-#include "Player.hpp"
-#include "FirstScene.hpp"
-
 Game::Game(int width, int height, const char* title)
 {
     window = new Window(width, height, title);
@@ -22,7 +19,6 @@ void Game::gameLoop()
 
     Collider collider;
 
-    bool check = true;
     while (!window->isShouldClose())
     {
         // deltaTime
@@ -41,6 +37,8 @@ void Game::gameLoop()
         window->render();
 
         window->swapBuffers();
+
+        window->update();
     }
 }
 

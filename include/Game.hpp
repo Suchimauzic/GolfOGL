@@ -13,6 +13,9 @@
 #include "Manager/TextureManager.hpp"
 #include "Manager/ShaderManager.hpp"
 
+#include "Player.hpp"
+#include "FirstScene.hpp"
+
 class Game
 {
 public:

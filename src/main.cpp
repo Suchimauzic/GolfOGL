@@ -19,7 +19,7 @@
 
 int main()
 {
-    Game game(1920, 1080, "GolfOGL");
+    Game game(1280, 720, "GolfOGL");
     
     int windowCodeStatus = game.getWindowStatus();
     

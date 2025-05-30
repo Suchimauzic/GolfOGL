@@ -133,6 +133,10 @@ void Window::render()
     Renderer::draw(&firstScene->getCamera());
 }
 
+void Window::update()
+{
+    firstScene->checkCollision();
+}
 
 // Geters
 
