@@ -32,6 +32,11 @@ public:
 
     glm::mat4 getViewMatrix() const;
     float getZoom() const;
+    glm::vec3 getPosition()
+    {
+        return position;
+    }
+
     void proccessKeyboard(CameraMovement direction, float deltaTime);
     void proccessMouseMovement(float xOffest, float yOffset, GLboolean constraintPitch = true);
     void proccessMouseScroll(float yOffset);

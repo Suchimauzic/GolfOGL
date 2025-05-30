@@ -8,9 +8,9 @@ FirstScene::FirstScene()
 }
 
 FirstScene::~FirstScene()
-{
+{ 
     Renderer::removeObject(player->getObject());
-
+    
     delete player;
     delete camera;
 
@@ -23,7 +23,12 @@ FirstScene::~FirstScene()
 
 void FirstScene::processInput(GLFWwindow* window, float deltaTime)
 {
-    float speed = player->getSpeed() * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, 1);
+    }
+
+    float speed = player->getSpeed();
     glm::vec3 moveDirection(0.0f);
 
     // Inputs
@@ -47,27 +52,18 @@ void FirstScene::processInput(GLFWwindow* window, float deltaTime)
         moveDirection.x += 1.0f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, 1);
-    }
-
-
     // Speed calculation
 
-    glm::vec3 playerNewPosition = player->getPosition();
-
-    // Need to move a player, now he's not move
-    // Maybe the player needs his own shader
+    glm::vec3 playerNewPosition = glm::vec3(0.0f);
 
     if (moveDirection.x != 0.0f || moveDirection.z != 0.0f)
     {
         moveDirection = glm::normalize(moveDirection) * speed;
-        playerNewPosition = player->getPosition() + moveDirection;
+        playerNewPosition = (player->getPosition() + moveDirection) * deltaTime;
         player->setPosition(playerNewPosition);
     }
-
-    camera->setPosition(playerNewPosition + glm::vec3(0.0f, 3.0f, 2.0f), deltaTime);
+    
+    camera->updatePosition(playerNewPosition);
 }
 
 Camera& FirstScene::getCamera()
@@ -97,11 +93,11 @@ void FirstScene::loadRenderer()
 
 void FirstScene::generateLevel()
 {
+    camera = new Camera(glm::vec3(-4.5f, -0.25f, 4.5f) + glm::vec3(0.0f, 3.0f, 2.0f));
+    camera->setPitch(-60.0f);
+
     player = new Player();
     player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
-
-    camera = new Camera(glm::vec3(-4.5f, 2.25f, 6.0f));
-    camera->setPitch(-60.0f);
 
     // Floor
     Cube* cube = new Cube();

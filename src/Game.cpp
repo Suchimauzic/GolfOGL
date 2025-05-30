@@ -20,8 +20,6 @@ void Game::gameLoop()
     ShaderManager::loadShader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs", "CubeShader");
     ShaderManager::loadShader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs", "SphereShader");
 
-    FirstScene* firstScene = new FirstScene();
-
     Collider collider;
 
     bool check = true;
@@ -44,8 +42,6 @@ void Game::gameLoop()
 
         window->swapBuffers();
     }
-
-    delete firstScene;
 }
 
 int Game::getWindowStatus()
