@@ -37,8 +37,6 @@ void Game::gameLoop()
         window->render();
 
         window->swapBuffers();
-
-        window->update();
     }
 }
 

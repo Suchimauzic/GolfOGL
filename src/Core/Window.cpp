@@ -1,5 +1,7 @@
 #include "Core/Window.hpp"
 
+#include <sstream>
+
 // Variables
 
 FirstScene* Window::firstScene = nullptr;
@@ -135,7 +137,7 @@ void Window::render()
 
 void Window::update()
 {
-    firstScene->checkCollision();
+    
 }
 
 // Geters

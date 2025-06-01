@@ -43,6 +43,11 @@ bool Player::isCollision(Object& object)
     return collider->isCollision(sphere->getWorldVertices(), object.getWorldVertices());
 }
 
+bool Player::isCollision(Object& object, glm::vec3& normal, float& penetration)
+{
+    return collider->isCollision(sphere->getWorldVertices(), object.getWorldVertices(), normal, penetration);
+}
+
 void Player::setStatus(PlayerStatus status)
 {
     this->status = status;
@@ -60,7 +65,7 @@ void Player::setRotation(float angle, glm::vec3 rotation)
 
 void Player::setSize(glm::vec3 size)
 {
-
+    sphere->setSize(size);
 }
 
 void Player::setSpeed(float speed)

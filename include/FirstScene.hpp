@@ -21,7 +21,7 @@ public:
     ~FirstScene();
 
     void processInput(GLFWwindow* window, float deltaTime);
-
+    
     void checkCollision();
     Camera& getCamera();
 

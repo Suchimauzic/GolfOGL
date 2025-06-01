@@ -23,6 +23,7 @@ FirstScene::~FirstScene()
 
 void FirstScene::processInput(GLFWwindow* window, float deltaTime)
 {
+    // Close the game
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, 1);
@@ -52,33 +53,49 @@ void FirstScene::processInput(GLFWwindow* window, float deltaTime)
         moveDirection.x += 1.0f;
     }
 
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    {
+        speed = player->getSpeed() + 10.0f;
+    }
+
     // Speed calculation
 
     glm::vec3 playerNewPosition = glm::vec3(0.0f);
 
     if (moveDirection.x != 0.0f || moveDirection.z != 0.0f)
     {
+        // Calculation a new position
         moveDirection = glm::normalize(moveDirection) * speed;
         playerNewPosition = (player->getPosition() + moveDirection) * deltaTime;
         player->setPosition(playerNewPosition);
+        
+        // Check collision
+        checkCollision();
+
+        // Set a camera position relative to a player's global position + camera offset
+        camera->setPosition(player->getObject().getGlobalPosition() + glm::vec3(0.0f, 2.2f, 1.3f), deltaTime);
     }
-    
-    camera->updatePosition(playerNewPosition);
 }
 
 void FirstScene::checkCollision()
 {
+    glm::vec3 normal;
+    float penetration;
     glm::vec3 playerPos = player->getObject().getGlobalPosition();
 
     for (Object* object : levelObjects)
     {
-        glm::vec3 dir = glm::abs(object->getPosition() - playerPos);
-        if (dir.x > 0.5f || dir.z > 0.5f)
-            continue;
-        
-        if (player->isCollision(*object))
+        if (glm::distance(player->getObject().getGlobalPosition(), object->getGlobalPosition()) > 1.5f)
         {
-            Logger::printInfo("Collision!");
+            continue;
+        }
+
+        normal = glm::vec3(0.0f);
+        penetration = 0.0f;
+
+        if (player->isCollision(*object, normal, penetration))
+        {
+            player->setPosition(-player->getPosition() + normal * penetration);
         }
     }
 }
@@ -110,12 +127,12 @@ void FirstScene::loadRenderer()
 
 void FirstScene::generateLevel()
 {
-    camera = new Camera(glm::vec3(-4.5f, -0.25f, 4.5f) + glm::vec3(0.0f, 2.0f, 1.25f));
-    camera->setPitch(-60.0f);
-
     player = new Player();
     player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
     
+
+    camera = new Camera(player->getObject().getGlobalPosition() + glm::vec3(0.0f, 2.2f, 1.3f));
+    camera->setPitch(-60.0f);
 
     // Floor
     Cube* cube = new Cube();
@@ -124,31 +141,88 @@ void FirstScene::generateLevel()
     levelObjects.push_back(cube);
 
     // Level wall
+
     // Left
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-5.0f, -0.5f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 10.1f));
-    levelObjects.push_back(cube);
+    for (int i = 0; i < 10; ++i)
+    {
+        cube = new Cube();
+
+        if (i % 2 == 0)
+        {
+            cube->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+        }
+        else
+        {
+            cube->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+        }
+
+        levelObjects.push_back(cube);
+    }
+
 
     // Back
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -0.5f, -5.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 9.9f));
-    levelObjects.push_back(cube);
+    for (int i = 0; i < 10; ++i)
+    {
+        cube = new Cube();
 
+        if (i % 2 == 0)
+        {
+            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
+            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+        }
+        else
+        {
+            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
+            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+        }
+        
+        levelObjects.push_back(cube);
+    }
+    
     // Right
-    cube = new Cube();
-    cube->setPosition(glm::vec3(5.0f, -0.5f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 10.1f));
-    levelObjects.push_back(cube);
+    for (int i = 0; i < 10; ++i)
+    {
+        cube = new Cube();
+
+        if (i % 2 == 0)
+        {
+            cube->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+            
+        }
+        else
+        {
+            cube->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+        }
+
+        levelObjects.push_back(cube);
+    }
     
     // Front
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -0.5f, 5.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 9.9f));
-    levelObjects.push_back(cube);
+    for (int i = 0; i < 10; ++i)
+    {
+        cube = new Cube();
+
+        if (i % 2 == 0)
+        {
+            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
+            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+        }
+        else
+        {
+            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
+            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+        }
+        
+        levelObjects.push_back(cube);
+    }
 
 
     // Labyrinth

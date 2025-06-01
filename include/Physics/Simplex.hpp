@@ -15,6 +15,10 @@ public:
 
     void push_front(glm::vec3 vertex);
     unsigned int getSize() const;
+    std::array<glm::vec3, 4> getVertices();
+
+    auto begin() const { return vertices.begin(); }
+    auto end() const { return vertices.end() - (4 - size); }
 
 private:
     std::array<glm::vec3, 4> vertices;

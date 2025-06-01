@@ -108,3 +108,19 @@ std::vector<glm::vec3> Object::getWorldVertices() const
 
     return worldVertices;
 }
+
+std::vector<glm::vec3> Object::getWorldVertices(const glm::vec3& position) const
+{
+    std::vector<glm::vec3> worldVertices;
+    std::vector<Vertex> meshVertices = mesh->getVertices();
+
+    for (int i = 0; i < meshVertices.size(); ++i)
+    {
+        worldVertices.push_back(glm::vec3
+        (
+            glm::translate(model, position) * glm::vec4(meshVertices[i].position, 1.0f)
+        ));
+    }
+
+    return worldVertices;
+}

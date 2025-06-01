@@ -35,6 +35,157 @@ bool Collider::isCollision(const std::vector<glm::vec3>& verticesA, const std::v
     return false;
 }
 
+bool Collider::isCollision
+(
+    const std::vector<glm::vec3>& verticesA,
+    const std::vector<glm::vec3>& verticesB,
+    glm::vec3& normal,
+    float& penetrationDepth
+)
+{
+    // First support point
+    glm::vec3 direction = glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::vec3 support = supportVertex(verticesA, verticesB, direction);
+
+    Simplex simplex;
+    // First simplex point
+    simplex.push_front(support);
+
+    // Direction is towards to origin
+    direction = -support;
+
+    for (int i = 0; i < 100; ++i)
+    {
+        // New support point
+        support = supportVertex(verticesA, verticesB, direction);
+
+        if (glm::dot(support, direction) <= 0)
+        {
+            return false;
+        }
+        
+        simplex.push_front(support);
+
+        // Check collision
+        if (nextSimplex(simplex, direction))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Collider::EPA
+(
+    const Simplex& simplex,
+    const std::vector<glm::vec3>& verticesA,
+    const std::vector<glm::vec3>& verticesB,
+    glm::vec3& normal,
+    float& penetrationDepth
+)
+{
+    std::vector<glm::vec3> polytope(simplex.begin(), simplex.end());
+    std::vector<int> faces =
+    {
+        0, 1, 2,
+        0, 3, 1,
+        0, 2, 3,
+        1, 3, 2
+    };
+
+    std::vector<glm::vec4> normals;
+    int minFace;
+    getFaceNormals(polytope, faces, normals, minFace);
+
+    glm::vec3 minNormal;
+    float minDistance = FLT_MAX;
+
+    while (minDistance == FLT_MAX)
+    {
+        minNormal = glm::vec3(normals[minFace].x, normals[minFace].y, normals[minFace].z);
+        minDistance = normals[minFace].w;
+
+        glm::vec3 support = supportVertex(verticesA, verticesB, minNormal);
+        float sDistance = glm::dot(minNormal, support);
+
+        if (glm::abs(sDistance - minDistance) > 0.001f)
+        {
+            minDistance = FLT_MAX;
+            std::vector<std::pair<int, int>> uniqueEdges;
+
+            for (int i = 0; i < normals.size(); ++i)
+            {
+                if (sameDirection(normals[i], support))
+                {
+                    int f = i * 3;
+
+                    addIfUniqueEdge(uniqueEdges, faces, f, f + 1);
+                    addIfUniqueEdge(uniqueEdges, faces, f + 1, f + 2);
+                    addIfUniqueEdge(uniqueEdges, faces, f + 2, f);
+
+                    faces[f + 2] = faces.back();
+                    faces.pop_back();
+
+                    faces[f + 1] = faces.back();
+                    faces.pop_back();
+
+                    faces[f] = faces.back();
+                    faces.pop_back();
+
+                    normals[i] = normals.back();
+                    normals.pop_back();
+
+                    --i;
+                }
+            }
+
+            std::vector<int> newFaces;
+
+            for (auto [edgeIndex1, edgeIndex2] : uniqueEdges)
+            {
+                newFaces.push_back(edgeIndex1);
+                newFaces.push_back(edgeIndex2);
+                newFaces.push_back(polytope.size());
+            }
+
+            polytope.push_back(support);
+
+            std::vector<glm::vec4> newNormals;
+            int newMinFace;
+            getFaceNormals(polytope, newFaces, newNormals, newMinFace);
+
+            float oldMinDistance = FLT_MAX;
+            
+            for (int i = 0; i < normals.size(); ++i)
+            {
+                if (normals[i].w < oldMinDistance)
+                {
+                    oldMinDistance = normals[i].w;
+                    minFace = i;
+                }
+            }
+
+            if (newNormals[newMinFace].w < oldMinDistance)
+            {
+                minFace = newMinFace + normals.size();
+            }
+
+            faces.insert(faces.end(), newFaces.begin(), newFaces.end());
+            normals.insert(normals.end(), newNormals.begin(), newNormals.end());
+        }
+    }
+
+    normal = minNormal;
+    penetrationDepth = minDistance + 0.001f;
+
+    return true;
+}
+
+
+// For GJK
+
 glm::vec3 Collider::findFurthestVertex(const std::vector<glm::vec3>& vertices, const glm::vec3& direction)
 {
     glm::vec3 maxVertex;
@@ -190,24 +341,69 @@ bool Collider::tetrahedronSimplex(Simplex& simplex, glm::vec3& direction)
     return true;
 }
 
-bool Collider::isValid(const glm::vec3& vertex)
-{
-    return !
-    (
-        std::isnan(vertex.x) || std::isnan(vertex.y) || std::isnan(vertex.z) ||
-        std::isinf(vertex.x) || std::isinf(vertex.y) || std::isinf(vertex.z)
-    );
-}
+// For EPA
 
-bool Collider::isValid(const std::vector<glm::vec3>& vertices)
+void Collider::getFaceNormals
+(
+    const std::vector<glm::vec3>& polytope,
+    const std::vector<int>& faces,
+    std::vector<glm::vec4> normalsOut,
+    int minFaceOut
+)
 {
-    for (glm::vec3 vertex : vertices)
+    std::vector<glm::vec4> normals;
+    int minTriangle = 0;
+    float minDistance = FLT_MAX;
+
+    for (int i = 0; i < faces.size(); i += 3)
     {
-        if (!isValid(vertex))
+        glm::vec3 a = polytope[faces[i]];
+        glm::vec3 b = polytope[faces[i + 1]];
+        glm::vec3 c = polytope[faces[i + 2]];
+
+        glm::vec3 normal = glm::normalize(glm::cross(b - a, c - a));
+        float distance = glm::dot(normal, a);
+
+        if (distance < 0)
         {
-            return false;
+            normal *= -1;
+            distance *= -1;
+        }
+
+        normals.emplace_back(normal, distance);
+
+        if (distance < minDistance)
+        {
+            minTriangle = i / 3;
+            minDistance = distance;
         }
     }
 
-    return true;
+    normalsOut = normals;
+    minFaceOut = minTriangle;
+}
+
+void Collider::addIfUniqueEdge
+(
+    std::vector<std::pair<int, int>>& edges,
+    const std::vector<int>& faces,
+    int a,
+    int b
+)
+{
+    auto reverse = std::find
+    (
+        edges.begin(),
+        edges.end(),
+        std::make_pair(faces[b], faces[a])
+    );
+
+    if (reverse != edges.end())
+    {
+        edges.erase(reverse);
+    }
+    else
+    {
+        edges.emplace_back(faces[a], faces[b]);
+    }
 }

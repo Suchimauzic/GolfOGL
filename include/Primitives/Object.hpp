@@ -42,6 +42,7 @@ public:
     Mesh* getMesh();
     glm::mat4 getModel() const;
     std::vector<glm::vec3> getWorldVertices() const;
+    std::vector<glm::vec3> getWorldVertices(const glm::vec3& position) const;
 
 protected:
     Mesh* mesh;

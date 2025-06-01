@@ -37,3 +37,8 @@ unsigned int Simplex::getSize() const
 {
     return size;
 }
+
+std::array<glm::vec3, 4> Simplex::getVertices()
+{
+    return vertices;
+}

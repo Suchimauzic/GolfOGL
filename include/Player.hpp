@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "Primitives/Sphere.hpp"
+#include "Primitives/Cube.hpp"
 
 #include "Physics/Gravity.hpp"
 #include "Physics/Collider.hpp"
@@ -27,6 +28,7 @@ public:
     void loadShader(const std::string& shaderName);
 
     bool isCollision(Object& object);
+    bool isCollision(Object& object, glm::vec3& normal, float& penetration);
     
     // Setters
     void setStatus(PlayerStatus status);
