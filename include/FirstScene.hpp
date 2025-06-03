@@ -9,6 +9,9 @@
 
 #include "Primitives/Cube.hpp"
 
+#include "GameElements/Item.hpp"
+#include "GameElements/Wall.hpp"
+
 #include "Player.hpp"
 #include "Camera.hpp"
 
@@ -23,6 +26,7 @@ public:
     void processInput(GLFWwindow* window, float deltaTime);
     
     void checkCollision();
+    void collisionItem(GameElement* item);
     Camera& getCamera();
 
 private:
@@ -32,7 +36,8 @@ private:
     
     Player* player;
     Camera* camera;
-    std::vector<Object*> levelObjects;
+    Item* item;
+    std::vector<GameElement*> gameElements;
 };
 
 #endif

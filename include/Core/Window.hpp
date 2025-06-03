@@ -19,6 +19,9 @@ class Window
 public:
     Window(int width, int height, const char* title);
     ~Window();
+
+    void loadScene(FirstScene* firstScene);
+    void removeScene();
     
     // Loop methods
     int isShouldClose();

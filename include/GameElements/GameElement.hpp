@@ -1,30 +1,38 @@
 #ifndef GAMEELEMENT_HPP
 #define GAMEELEMENT_HPP
 
-#include "Primitives/Cube.hpp"
-#include "Core/Renderer.hpp"
-#include <vector>
+#include <string>
+
+#include <glm/glm.hpp>
+#include "Primitives/Object.hpp"
+#include "GameElements/CollisionState.hpp"
 
 class GameElement
 {
 public:
-    virtual ~GameElement();
+    virtual ~GameElement() = default;
 
-    virtual void generate() = 0;
+    virtual void loadShader(const std::string& shaderName) = 0;
 
-    void loadShader(const std::string& shaderName);
-    void loadRenderer();
+    // Setters
+    virtual void setPosition      (glm::vec3 position)              = 0;
+    virtual void setRotation      (float angle, glm::vec3 rotation) = 0;
+    virtual void setSize          (glm::vec3 size)                  = 0;
+    virtual void setCollisionState(CollisionState collisionState)   = 0;
 
-    void setPosition(glm::vec3 position);
-    void setRotation(float rotation);
+    // Getters
+    virtual glm::vec3      getPosition()       const = 0;
+    virtual glm::vec3      getGlobalPosition() const = 0;
+    virtual glm::vec3      getRotation()       const = 0;
+    virtual glm::vec3      getSize()           const = 0;
+    virtual CollisionState getCollisionState() const = 0;
+    virtual Object&        getObject()               = 0;
 
 protected:
-    std::vector<Object*> objects;
-        
-    glm::vec3 position;
-    float rotation;
-    
-    GameElement();
+    CollisionState collisionState = CollisionState::NONE;
+
+    GameElement() = default;
+    GameElement(CollisionState collisionState);
 };
 
 #endif

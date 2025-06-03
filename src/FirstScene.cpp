@@ -5,19 +5,21 @@ FirstScene::FirstScene()
     generateLevel();
     loadShader();
     loadRenderer();
+
+    item->setColor("lightColor", glm::vec3(0.24f, 0.67f, 0.24f));
 }
 
 FirstScene::~FirstScene()
-{ 
+{
     Renderer::removeObject(player->getObject());
     
     delete player;
     delete camera;
 
-    for (Object* object : levelObjects)
+    for (GameElement* gameElement : gameElements)
     {
-        Renderer::removeObject(*object);
-        delete object;
+        Renderer::removeObject(gameElement->getObject());
+        delete gameElement;
     }
 }
 
@@ -81,23 +83,42 @@ void FirstScene::checkCollision()
 {
     glm::vec3 normal;
     float penetration;
-    glm::vec3 playerPos = player->getObject().getGlobalPosition();
 
-    for (Object* object : levelObjects)
+    for (GameElement* gameElement : gameElements)
     {
-        if (glm::distance(player->getObject().getGlobalPosition(), object->getGlobalPosition()) > 1.5f)
+        if (gameElement->getCollisionState() == CollisionState::NONE)
         {
             continue;
         }
 
-        normal = glm::vec3(0.0f);
-        penetration = 0.0f;
-
-        if (player->isCollision(*object, normal, penetration))
+        if (glm::distance(player->getGlobalPosition(), gameElement->getGlobalPosition()) > 1.5f)
         {
-            player->setPosition(-player->getPosition() + normal * penetration);
+            continue;
+        }
+        
+        if (gameElement->getCollisionState() == CollisionState::ITEM)
+        {
+            if (player->isCollision(gameElement->getObject()))
+            {
+                collisionItem(gameElement);
+            }
+        }
+        else
+        {
+            if (player->isCollision(gameElement->getObject(), normal, penetration))
+            {
+                normal = glm::vec3(0.0f);
+                penetration = 0.0f;
+                player->setPosition(-player->getPosition() + normal * penetration);
+            }
         }
     }
+}
+
+void FirstScene::collisionItem(GameElement* item)
+{
+    Renderer::removeObject(item->getObject());
+    item->setCollisionState(CollisionState::NONE);
 }
 
 Camera& FirstScene::getCamera()
@@ -109,9 +130,16 @@ void FirstScene::loadShader()
 {
     player->loadShader("CubeShader");
 
-    for (Object* object : levelObjects)
+    for (GameElement* gameElement : gameElements)
     {
-        object->loadShader("CubeShader");
+        if (gameElement->getCollisionState() == CollisionState::ITEM)
+        {
+            gameElement->loadShader("LightShader");
+        }
+        else
+        {
+            gameElement->loadShader("CubeShader");
+        }
     }
 }
 
@@ -119,9 +147,9 @@ void FirstScene::loadRenderer()
 {
     Renderer::addObject(player->getObject());
 
-    for (Object* object : levelObjects)
+    for (GameElement* gameElement : gameElements)
     {
-        Renderer::addObject(*object);
+        Renderer::addObject(gameElement->getObject());
     }
 }
 
@@ -129,99 +157,105 @@ void FirstScene::generateLevel()
 {
     player = new Player();
     player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
-    
 
     camera = new Camera(player->getObject().getGlobalPosition() + glm::vec3(0.0f, 2.2f, 1.3f));
     camera->setPitch(-60.0f);
 
-    // Floor
-    Cube* cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -1.0f, 0.0f));
-    cube->setSize(glm::vec3(10.5f, 0.1f, 10.5f));
-    levelObjects.push_back(cube);
+    item = new Item();
+    item->setPosition(glm::vec3(2.5f, -0.5f, -4.5f));
+    item->setSize(glm::vec3(1.0f));
+    gameElements.push_back(item);
 
+    // Floor
+    Wall* floor = new Wall();
+    floor->setPosition(glm::vec3(0.0f, -1.0f, 0.0f));
+    floor->setSize(glm::vec3(10.5f, 0.1f, 10.5f));
+    floor->setCollisionState(CollisionState::NONE);
+    gameElements.push_back(floor);
+
+    Wall* wall;
     // Level wall
 
     // Left
     for (int i = 0; i < 10; ++i)
     {
-        cube = new Cube();
+        wall = new Wall();
 
         if (i % 2 == 0)
         {
-            cube->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+            wall->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
         }
         else
         {
-            cube->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+            wall->setPosition(glm::vec3(-5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
         }
 
-        levelObjects.push_back(cube);
+        gameElements.push_back(wall);
     }
 
 
     // Back
     for (int i = 0; i < 10; ++i)
     {
-        cube = new Cube();
+        wall = new Wall();
 
         if (i % 2 == 0)
         {
-            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
-            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+            wall->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
+            wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
         }
         else
         {
-            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
-            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+            wall->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, -5.0f));
+            wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
         }
         
-        levelObjects.push_back(cube);
+        gameElements.push_back(wall);
     }
     
     // Right
     for (int i = 0; i < 10; ++i)
     {
-        cube = new Cube();
+        wall = new Wall();
 
         if (i % 2 == 0)
         {
-            cube->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+            wall->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
             
         }
         else
         {
-            cube->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+            wall->setPosition(glm::vec3(5.0f, -0.5f, -4.5f + static_cast<float>(i)));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
         }
 
-        levelObjects.push_back(cube);
+        gameElements.push_back(wall);
     }
     
     // Front
     for (int i = 0; i < 10; ++i)
     {
-        cube = new Cube();
+        wall = new Wall();
 
         if (i % 2 == 0)
         {
-            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
-            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+            wall->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
+            wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
         }
         else
         {
-            cube->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
-            cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-            cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+            wall->setPosition(glm::vec3(-4.5f + static_cast<float>(i), -0.5f, 5.0f));
+            wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+            wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
         }
         
-        levelObjects.push_back(cube);
+        gameElements.push_back(wall);
     }
 
 
@@ -246,469 +280,474 @@ void FirstScene::generateLevel()
         f - finish
     */
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.0f, -0.5f, 4.45f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    // wall = new Wall();
+    // wall->setPosition(glm::vec3(2.5f, -0.5f, -4.5f));
+    // wall->setSize(glm::vec3(0.2f, 0.2f, 0.2f));
+    // walls.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.0f, -0.5f, 4.45f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.0f, -0.5f, 4.45f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.0f, -0.5f, 3.45f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.0f, -0.5f, 4.45f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.0f, -0.5f, 2.45f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.0f, -0.5f, 3.45f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.45f, -0.5f, 3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.0f, -0.5f, 2.45f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.50f, -0.5f, 3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.45f, -0.5f, 3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.0f, -0.5f, 2.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.50f, -0.5f, 3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.0f, -0.5f, 1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.0f, -0.5f, 2.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.45f, -0.5f, 1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.0f, -0.5f, 1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.5f, -0.5f, 1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.45f, -0.5f, 1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.0f, -0.5f, 1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.5f, -0.5f, 1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.0f, -0.5f, 2.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.0f, -0.5f, 1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, 3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.0f, -0.5f, 2.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -0.5f, 2.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, 3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
+
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.0f, -0.5f, 2.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
     
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -0.5f, 1.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.0f, -0.5f, 1.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.0f, -0.5f, 0.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.0f, -0.5f, 0.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, 0.05f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, 0.05f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.5f, -0.5f, 0.05f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.5f, -0.5f, 0.05f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.5f, -0.5f, 4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.5f, -0.5f, 4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.0f, -0.5f, 3.45f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.0f, -0.5f, 3.45f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.0f, -0.5f, 2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.0f, -0.5f, 2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.5f, -0.5f, 2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.5f, -0.5f, 2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
     
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, 2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, 2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.45f, -0.5f, 3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.05f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.45f, -0.5f, 3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.05f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.95f, -0.5f, 3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.95f, -0.5f, 3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.95f, -0.5f, 4.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.95f, -0.5f, 4.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, 4.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, 4.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, 3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, 3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.5f, -0.5f, 3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.5f, -0.5f, 3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, 1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, 1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, 0.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, 0.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.5f, -0.5f, 0.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.5f, -0.5f, 0.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.5f, -0.5f, 0.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.5f, -0.5f, 0.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.5f, -0.5f, 2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.5f, -0.5f, 2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.0f, -0.5f, 1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.0f, -0.5f, 1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.0f, -0.5f, 0.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.0f, -0.5f, 0.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.0f, -0.5f, -0.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.0f, -0.5f, -0.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.0f, -0.5f, -1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.0f, -0.5f, -1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.5f, -0.5f, -3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.5f, -0.5f, -3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, -1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, -1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(4.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(4.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(3.55f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(3.55f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.5f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.5f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, -4.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, -4.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.5f, -0.5f, -2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.5f, -0.5f, -2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, -1.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, -1.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, -0.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, -0.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(2.0f, -0.5f, 0.55f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(2.0f, -0.5f, 0.55f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.0f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.5f, -0.5f, 1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.5f, -0.5f, 1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.5f, -0.5f, -1.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.5f, -0.5f, -1.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.0f, -0.5f, -0.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.0f, -0.5f, -0.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.5f, -0.5f, 0.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.5f, -0.5f, 0.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.5f, -0.5f, 0.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.5f, -0.5f, 0.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.0f, -0.5f, 0.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.0f, -0.5f, 0.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.0f, -0.5f, 1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.0f, -0.5f, 1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.0f, -0.5f, -1.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.0f, -0.5f, -1.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-3.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-3.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-4.5f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-4.5f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.5f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.5f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-2.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-2.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.5f, -0.5f, -2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.5f, -0.5f, -2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, -2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, -2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.5f, -0.5f, -2.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.0f, -0.5f, -2.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.0f, -0.5f, -2.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(1.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(1.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-1.0f, -0.5f, -3.5f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-1.0f, -0.5f, -3.5f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(0.5f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(0.5f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 1.1f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, -4.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, -4.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 
-    cube = new Cube();
-    cube->setPosition(glm::vec3(-0.5f, -0.5f, -3.0f));
-    cube->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
-    levelObjects.push_back(cube);
+    wall = new Wall();
+    wall->setPosition(glm::vec3(-0.5f, -0.5f, -3.0f));
+    wall->setRotation(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    wall->setSize(glm::vec3(0.1f, 1.0f, 0.9f));
+    gameElements.push_back(wall);
 }

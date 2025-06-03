@@ -19,14 +19,21 @@ Window::Window(int width, int height, const char* title)
     codeStatus = 0;
 
     initWindow(width, height, title);
-
-    firstScene = new FirstScene();
 }
 
 Window::~Window()
 {
-    delete firstScene;
     glfwTerminate();
+}
+
+void Window::loadScene(FirstScene* firstScene)
+{
+    this->firstScene = firstScene;
+}
+
+void Window::removeScene()
+{
+    delete firstScene;
 }
 
 

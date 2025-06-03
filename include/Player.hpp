@@ -42,6 +42,7 @@ public:
     Gravity& getGravity();
     PlayerStatus getStatus() const;
     glm::vec3 getPosition();
+    glm::vec3 getGlobalPosition();
     float getSpeed();
 
 private:

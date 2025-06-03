@@ -32,6 +32,7 @@ public:
     void setPosition(const glm::vec3 position);
     void setSize(const glm::vec3 size);
     void setRotation(const float angle, const glm::vec3 rotation);
+    void setColor(const std::string& colorName, const glm::vec3& color);
 
     // Getters
     glm::vec3 getPosition();

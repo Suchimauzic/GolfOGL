@@ -58,6 +58,13 @@ void Object::setRotation(const float angle, const glm::vec3 rotation)
     model = glm::rotate(model, glm::radians(angle), rotation);
 }
 
+void Object::setColor(const std::string& colorName, const glm::vec3& color)
+{
+    Shader* shader = &ShaderManager::getShader(shaderName);
+    shader->use();
+    shader->setVec3(colorName, color);
+}
+
 glm::vec3 Object::getPosition()
 {
     return position;

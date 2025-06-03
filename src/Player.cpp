@@ -93,6 +93,11 @@ glm::vec3 Player::getPosition()
     return sphere->getPosition();
 }
 
+glm::vec3 Player::getGlobalPosition()
+{
+    return sphere->getGlobalPosition();
+}
+
 float Player::getSpeed()
 {
     return speed;

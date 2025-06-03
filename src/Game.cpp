@@ -1,8 +1,14 @@
 #include "Game.hpp"
 
+#include "GameElements/Item.hpp"
+
 Game::Game(int width, int height, const char* title)
 {
     window = new Window(width, height, title);
+
+    ShaderManager::loadShader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs", "CubeShader");
+    ShaderManager::loadShader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs", "SphereShader");
+    ShaderManager::loadShader("res/shaders/LightShader.vs", "res/shaders/LightShader.fs", "LightShader");
 
     TextureManager::initTextureManager();
 }
@@ -14,10 +20,7 @@ Game::~Game()
 
 void Game::gameLoop()
 {
-    ShaderManager::loadShader("res/shaders/CubeShader.vs", "res/shaders/CubeShader.fs", "CubeShader");
-    ShaderManager::loadShader("res/shaders/SphereShader.vs", "res/shaders/SphereShader.fs", "SphereShader");
-
-    Collider collider;
+    window->loadScene(new FirstScene());
 
     while (!window->isShouldClose())
     {
@@ -38,6 +41,8 @@ void Game::gameLoop()
 
         window->swapBuffers();
     }
+
+    window->removeScene();
 }
 
 int Game::getWindowStatus()
