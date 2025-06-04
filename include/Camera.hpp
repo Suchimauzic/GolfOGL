@@ -30,22 +30,24 @@ public:
         float yaw
     );
 
+    // Getters
     glm::mat4 getViewMatrix() const;
     float getZoom() const;
-    glm::vec3 getPosition()
-    {
-        return position;
-    }
+    glm::vec3 getPosition() const;
 
-    void proccessKeyboard(CameraMovement direction, float deltaTime);
-    void proccessMouseMovement(float xOffest, float yOffset, GLboolean constraintPitch = true);
-    void proccessMouseScroll(float yOffset);
-
-    void setPosition(glm::vec3 position, float deltaTime);
+    // Setters
+    void setPosition(glm::vec3 positione);
     void updatePosition(glm::vec3 position);
     void setPitch(float angle);
+    void setCameraOffset(glm::vec3 cameraOffset);
+
+    // Inputs
+    void proccessKeyboard(CameraMovement direction, float deltaTime);
+    void proccessMouseMovement(float xOffest, float yOffset, GLboolean constraintPitch = true);
+    void proccessMouseScroll(float yOffset);   
 
 private:
+    // Camera consts
     static constexpr float PITCH = 0.0f;
     static constexpr float YAW = -90.0f;
     static constexpr float SPEED = 2.5f;
@@ -58,6 +60,7 @@ private:
     glm::vec3 up;
     glm::vec3 right;
     glm::vec3 worldUp;
+    glm::vec3 cameraOffset;
 
     // Euler angles
     float pitch;

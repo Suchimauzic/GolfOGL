@@ -25,8 +25,8 @@ public:
 
     void processInput(GLFWwindow* window, float deltaTime);
     
-    void checkCollision();
-    void collisionItem(GameElement* item);
+    void checkCollision(GLFWwindow* window);
+    void collisionItem(GLFWwindow* window);
     Camera& getCamera();
 
 private:

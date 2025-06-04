@@ -13,7 +13,8 @@ Camera::Camera(
     position(position),
     worldUp(up),
     pitch(pitch),
-    yaw(yaw)
+    yaw(yaw),
+    cameraOffset(glm::vec3(0.0f))
 {
     updateCameraVectors();
 }
@@ -29,7 +30,8 @@ Camera::Camera(
     mouseSensitivity(SENSITIVITY),
     zoom(ZOOM),
     pitch(pitch),
-    yaw(yaw)
+    yaw(yaw),
+    cameraOffset(glm::vec3(0.0f))
 {
     position = glm::vec3(posX, posY, posZ);
     worldUp = glm::vec3(upX, upY, upZ);
@@ -44,6 +46,11 @@ glm::mat4 Camera::getViewMatrix() const
 float Camera::getZoom() const
 {
     return zoom;
+}
+
+glm::vec3 Camera::getPosition() const
+{
+    return position;
 }
 
 void Camera::proccessKeyboard(CameraMovement direction, float deltaTime)
@@ -100,9 +107,9 @@ void Camera::proccessMouseScroll(float yOffset)
         zoom = 45.0f;
 }
 
-void Camera::setPosition(glm::vec3 position, float deltaTime)
+void Camera::setPosition(glm::vec3 position)
 {
-    this->position = position;
+    this->position = position + cameraOffset;
 }
 
 void Camera::updatePosition(glm::vec3 position)
@@ -114,6 +121,11 @@ void Camera::setPitch(float angle)
 {
     pitch = angle;
     updateCameraVectors();
+}
+
+void Camera::setCameraOffset(glm::vec3 cameraOffset)
+{
+    this->cameraOffset = cameraOffset;
 }
 
 void Camera::updateCameraVectors()

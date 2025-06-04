@@ -72,14 +72,14 @@ void FirstScene::processInput(GLFWwindow* window, float deltaTime)
         player->setPosition(playerNewPosition);
         
         // Check collision
-        checkCollision();
+        checkCollision(window);
 
-        // Set a camera position relative to a player's global position + camera offset
-        camera->setPosition(player->getObject().getGlobalPosition() + glm::vec3(0.0f, 2.2f, 1.3f), deltaTime);
+        // Set a camera position relative to a player's global position
+        camera->setPosition(player->getObject().getGlobalPosition());
     }
 }
 
-void FirstScene::checkCollision()
+void FirstScene::checkCollision(GLFWwindow* window)
 {
     glm::vec3 normal;
     float penetration;
@@ -100,7 +100,7 @@ void FirstScene::checkCollision()
         {
             if (player->isCollision(gameElement->getObject()))
             {
-                collisionItem(gameElement);
+                collisionItem(window);
             }
         }
         else
@@ -115,10 +115,9 @@ void FirstScene::checkCollision()
     }
 }
 
-void FirstScene::collisionItem(GameElement* item)
+void FirstScene::collisionItem(GLFWwindow* window)
 {
-    Renderer::removeObject(item->getObject());
-    item->setCollisionState(CollisionState::NONE);
+    glfwSetWindowShouldClose(window, 1);
 }
 
 Camera& FirstScene::getCamera()
@@ -158,7 +157,9 @@ void FirstScene::generateLevel()
     player = new Player();
     player->setPosition(glm::vec3(-4.5f, -0.25f, 4.5f));
 
-    camera = new Camera(player->getObject().getGlobalPosition() + glm::vec3(0.0f, 2.2f, 1.3f));
+    camera = new Camera();
+    camera->setCameraOffset(glm::vec3(0.0f, 2.2f, 1.3f));
+    camera->setPosition(player->getObject().getGlobalPosition());
     camera->setPitch(-60.0f);
 
     item = new Item();
