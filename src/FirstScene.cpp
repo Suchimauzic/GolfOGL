@@ -6,7 +6,8 @@ FirstScene::FirstScene()
     loadShader();
     loadRenderer();
 
-    item->setColor("lightColor", glm::vec3(0.24f, 0.67f, 0.24f));
+    // item->setColor("lightColor", glm::vec3(0.24f, 0.67f, 0.24f));
+    item->setColor("lightColor", glm::vec3(1.0f, 0.6f, 0.0f));
 }
 
 FirstScene::~FirstScene()

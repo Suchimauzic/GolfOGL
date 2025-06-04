@@ -16,6 +16,7 @@ void Object::render(Camera* camera, int width, int height)
 
     Shader* shader = &ShaderManager::getShader(shaderName);
     shader->use();
+    
     projection = glm::perspective(glm::radians(camera->getZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f);
     shader->setMat4("projection", projection);
 

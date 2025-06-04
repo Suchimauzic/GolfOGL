@@ -20,7 +20,7 @@ public:
     static void initTextureManager();
     static void loadTexture(const char* filepath, const std::string& textureName, TextureType textureType);
     static Texture2D getTexture2D(const std::string& textureName);
-    static TextureCubemap getTextureCubemap(const std::string& textureName);
+    static TextureCubemap& getTextureCubemap(const std::string& textureName);
 
 private:
     static std::vector<TextureCubemap> textureCubemapList;

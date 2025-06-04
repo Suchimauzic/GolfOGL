@@ -5,7 +5,8 @@ std::vector<TextureCubemap> TextureManager::textureCubemapList = {};
 
 void TextureManager::initTextureManager()
 {
-    loadTexture("res/Textures/DefaultTexture.png", "default", TextureType::Cubemap);
+    // loadTexture("res/Textures/DefaultTexture.png", "default", TextureType::Cubemap);
+    loadTexture("res/Textures/DefaultTexture2.png", "default", TextureType::Cubemap);
 }
 
 void TextureManager::loadTexture(const char* filepath, const std::string& textureName, TextureType textureType)
@@ -35,7 +36,7 @@ Texture2D TextureManager::getTexture2D(const std::string& textureName)
     return texture2DList[0];
 }
 
-TextureCubemap TextureManager::getTextureCubemap(const std::string& textureName)
+TextureCubemap& TextureManager::getTextureCubemap(const std::string& textureName)
 {
     for (TextureCubemap& texture : textureCubemapList)
     {
