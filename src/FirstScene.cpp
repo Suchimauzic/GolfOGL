@@ -8,6 +8,7 @@ FirstScene::FirstScene()
 
     // item->setColor("lightColor", glm::vec3(0.24f, 0.67f, 0.24f));
     item->setColor("lightColor", glm::vec3(1.0f, 0.6f, 0.0f));
+    player->getObject().setColor("abobaColor", glm::vec3(0.24f, 0.67f, 0.24f));
 }
 
 FirstScene::~FirstScene()
@@ -128,7 +129,7 @@ Camera& FirstScene::getCamera()
 
 void FirstScene::loadShader()
 {
-    player->loadShader("CubeShader");
+    player->loadShader("SphereShader");
 
     for (GameElement* gameElement : gameElements)
     {

@@ -6,7 +6,8 @@ std::vector<TextureCubemap> TextureManager::textureCubemapList = {};
 void TextureManager::initTextureManager()
 {
     // loadTexture("res/Textures/DefaultTexture.png", "default", TextureType::Cubemap);
-    loadTexture("res/Textures/DefaultTexture2.png", "default", TextureType::Cubemap);
+    // loadTexture("res/Textures/DefaultTexture2.png", "default", TextureType::Cubemap);
+    loadTexture("res/Textures/stone.jpg", "default", TextureType::Cubemap);
 }
 
 void TextureManager::loadTexture(const char* filepath, const std::string& textureName, TextureType textureType)
