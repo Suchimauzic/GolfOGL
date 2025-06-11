@@ -52,7 +52,7 @@ TEST(CubeCollision, TwoCubesCollideWithTheirFaces)
     ASSERT_EQ(isCollision, true);
 }
 
-TEST(CubeCollision, TwoCubesEnterEachOther)
+TEST(CubeCollision, TwoCubesEnteredEachOther)
 {
     // Arrange
     Cube cube1;
@@ -74,7 +74,7 @@ TEST(CubeCollision, TwoCubesEnterEachOther)
 }
 
 
-TEST(SphereCollision, TwoSphereDoNotCollide)
+TEST(SphereCollision, TwoSpheresDoNotCollide)
 {
     // Arrange
     Sphere sphere1(1.0f, 32, 32);
@@ -92,7 +92,7 @@ TEST(SphereCollision, TwoSphereDoNotCollide)
     ASSERT_EQ(isCollision, false);
 }
 
-TEST(SphereCollision, TwoSphereCollideWithTheirFaces)
+TEST(SphereCollision, TwoSpheresCollideWithTheirFaces)
 {
     // Arrange
     Sphere sphere1(1.0f, 32, 32);
@@ -110,7 +110,7 @@ TEST(SphereCollision, TwoSphereCollideWithTheirFaces)
     ASSERT_EQ(isCollision, true);
 }
 
-TEST(SphereCollision, TwoSphereEnteredEachOther)
+TEST(SphereCollision, TwoSpheresEnteredEachOther)
 {
     // Arrange
     Sphere sphere1(1.0f, 32, 32);
