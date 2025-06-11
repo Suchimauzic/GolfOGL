@@ -29,8 +29,16 @@ set(PROJECT_CPP_PATH
     ${SRC}/Primitives/*.cpp
 )
 
+# For creating tests
+set(PROJECT_UNIT_TEST TRUE CACHE INTERNAL BOOL "For creating unit-tests")
+
 # Libs
 add_subdirectory(libs)
+
+if (PROJECT_UNIT_TEST)
+    cmake_policy(SET CMP0079 NEW)
+    add_subdirectory(tests)
+endif()
 
 # .hpp and .cpp files
 include_directories(${PROJECT_INCLUDE_PATH})
@@ -58,3 +66,9 @@ add_custom_command(TARGET ${PROJECT_NAME}
     ${OUTPUT_DIR}/res
     COMMENT "Copying res in building directory"
 )
+
+
+# For tests
+if (PROJECT_UNIT_TEST)
+    target_link_libraries(tests PRIVATE glad glfw glm stb_image gtest gtest_main)
+endif()

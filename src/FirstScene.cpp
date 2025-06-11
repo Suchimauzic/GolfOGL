@@ -93,7 +93,7 @@ void FirstScene::checkCollision(GLFWwindow* window)
             continue;
         }
 
-        if (glm::distance(player->getGlobalPosition(), gameElement->getGlobalPosition()) > 1.5f)
+        if (glm::distance(player->getGlobalPosition(), gameElement->getGlobalPosition()) > 1.1f)
         {
             continue;
         }

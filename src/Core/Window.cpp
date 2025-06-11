@@ -144,7 +144,7 @@ void Window::render()
 
 void Window::update()
 {
-    
+    Logger::printValue("FPS", 1.0f / deltaTime);
 }
 
 // Geters
