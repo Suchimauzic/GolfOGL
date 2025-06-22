@@ -1,7 +1,5 @@
 #include "Core/Window.hpp"
 
-#include <sstream>
-
 // Variables
 
 FirstScene* Window::firstScene = nullptr;

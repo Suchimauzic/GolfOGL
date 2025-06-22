@@ -30,7 +30,7 @@ set(PROJECT_CPP_PATH
 )
 
 # For creating tests
-set(PROJECT_UNIT_TEST TRUE CACHE INTERNAL BOOL "For creating unit-tests")
+set(PROJECT_UNIT_TEST TRUE CACHE BOOL "For creating unit-tests")
 
 # Libs
 add_subdirectory(libs)
@@ -71,4 +71,12 @@ add_custom_command(TARGET ${PROJECT_NAME}
 # For tests
 if (PROJECT_UNIT_TEST)
     target_link_libraries(tests PRIVATE glad glfw glm stb_image gtest gtest_main)
+endif()
+
+
+# Debug and Release definitions
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE BUILD_TYPE_DEBUG)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE BUILD_TYPE_RELEASE)
 endif()

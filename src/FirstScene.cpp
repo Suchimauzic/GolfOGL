@@ -57,10 +57,12 @@ void FirstScene::processInput(GLFWwindow* window, float deltaTime)
         moveDirection.x += 1.0f;
     }
 
+#ifdef BUILD_TYPE_DEBUG
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
     {
         speed = player->getSpeed() + 10.0f;
     }
+#endif
 
     // Speed calculation
 
