@@ -17,7 +17,7 @@ The game uses these dependecies:
 First, need to clone this project to your computer using `--recursive`:
 
 ```sh
-$ git clone --recursive https://github.com/Suchimauzic/Diploma
+$ git clone --recursive https://github.com/Suchimauzic/LabyrinthOGL
 ```
 
 Second, need to create a `build` folder and comile the project:
